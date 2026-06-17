@@ -1,0 +1,10 @@
+{
+  "name": "CySA+ Trainer",
+  "short_name": "CySA Trainer",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "description": "Mobile-friendly CySA+ practice trainer.",
+  "icons": []
+}
