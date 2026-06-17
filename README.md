@@ -1,13 +1,5 @@
-# CySA+ Coach Foundation Release
+# CySA+ Coach Release 2
 
-Includes:
-- Real icons and favicon
-- PWA support
-- Dashboard
-- Saved local progress
-- Readiness estimate
-- Recommended focus area
-- Coach notes for missed-question patterns
-- Detailed correct/incorrect explanations
+Adds question navigator, previous/next navigation, persistent flagged questions, favorites, incorrect review, and saved progress.
 
-Upload the contents of this folder to your GitHub Pages repository root.
+Upload contents to GitHub repo root.

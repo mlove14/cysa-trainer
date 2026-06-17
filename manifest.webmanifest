@@ -1,11 +1,10 @@
 {
-  "name": "CySA+ Coach Foundation",
+  "name": "CySA+ Coach Release 2",
   "short_name": "CySA Coach",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
-  "description": "Mobile-friendly CySA+ CS0-003 training platform.",
   "icons": [
     {
       "src": "icons/icon-192.png",
