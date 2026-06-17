@@ -1,10 +1,21 @@
 {
-  "name": "CySA+ Trainer",
-  "short_name": "CySA Trainer",
+  "name": "CySA+ Coach Foundation",
+  "short_name": "CySA Coach",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
-  "description": "Mobile-friendly CySA+ practice trainer.",
-  "icons": []
+  "description": "Mobile-friendly CySA+ CS0-003 training platform.",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }

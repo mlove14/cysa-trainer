@@ -2,9 +2,9 @@
   "packs": [
     {
       "id": "pack1",
-      "title": "Pack 1: Exam Logic Starter",
+      "title": "Pack 1: Foundation Exam Logic",
       "file": "questions/pack1.json",
-      "count": 5
+      "count": 10
     }
   ]
 }

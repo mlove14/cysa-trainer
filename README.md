@@ -1,11 +1,13 @@
-# CySA+ Trainer PWA
+# CySA+ Coach Foundation Release
 
-Upload this whole folder to GitHub Pages, Netlify, or Vercel.
+Includes:
+- Real icons and favicon
+- PWA support
+- Dashboard
+- Saved local progress
+- Readiness estimate
+- Recommended focus area
+- Coach notes for missed-question patterns
+- Detailed correct/incorrect explanations
 
-## GitHub Pages
-Use a public repository on GitHub Free.
-Private repository Pages requires a paid GitHub plan.
-
-## Add more packs
-1. Add a JSON file to `questions/`.
-2. Add it to `questions/manifest.json`.
+Upload the contents of this folder to your GitHub Pages repository root.
