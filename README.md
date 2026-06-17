@@ -1,5 +1,5 @@
-# CySA+ Coach Release 2
+# CySA+ Coach Release 3
 
-Adds question navigator, previous/next navigation, persistent flagged questions, favorites, incorrect review, and saved progress.
+Adds Practice Mode, Exam Mode, side navigator, persistent answer highlighting, saved flags, favorites, and review lists.
 
 Upload contents to GitHub repo root.
