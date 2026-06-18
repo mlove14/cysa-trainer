@@ -1,0 +1,492 @@
+[
+  {
+    "id": 20101,
+    "kind": "single",
+    "domain": "Security Operations",
+    "topic": "Case 001: Payroll Phishing - Initial Triage",
+    "qtype": "BEST NEXT",
+    "difficulty": "Hard",
+    "question": "CASE FILE 001 \u2014 Payroll Phishing Campaign\n\nInvestigator's Notebook\nKnown facts:\n- A payroll specialist opened \"Updated_Payroll_Adjustments.zip\" from an external sender.\n- A second email contained the archive password.\n- Microsoft Defender reported WINWORD.EXE launching powershell.exe with an encoded command.\n- Defender blocked the PowerShell process.\n- DNS shows a lookup for payroll-adjustment-check[.]com.\n- Proxy logs do not show a completed HTTP session to that domain.\n\nUnknowns:\n- Whether the document dropped files before PowerShell was blocked.\n- Whether other users received or opened the attachment.\n- Whether credentials were submitted.\n\nWhich action should the analyst take NEXT?",
+    "options": [
+      "Reimage the payroll workstation immediately because encoded PowerShell confirms successful compromise.",
+      "Review endpoint, email, DNS, and proxy telemetry to determine whether files were dropped or other users were affected.",
+      "Reset all payroll department passwords because the domain is likely credential-harvesting infrastructure.",
+      "Close the alert because Defender blocked the PowerShell process before proxy communication completed."
+    ],
+    "answer": [
+      1
+    ],
+    "select_limit": 1,
+    "why_correct": "The alert is suspicious, but the available evidence does not yet prove successful compromise. The best next step is to validate and scope the activity.",
+    "trap": "CompTIA often expects validation and scoping before disruptive containment when impact is unclear.",
+    "takeaway": "Blocked malicious behavior still requires investigation.",
+    "mistake_type": "Jumping to remediation before scoping",
+    "why_wrong": {
+      "3": "A block event does not prove the attachment did not drop files, create persistence, or affect other users.",
+      "0": "Reimaging is premature before determining scope and preserving useful evidence.",
+      "2": "Credential resets may be needed if credential theft is suspected or confirmed, but that evidence is not provided."
+    },
+    "pack": "Pack 2A v1",
+    "case_file": "Case 001"
+  },
+  {
+    "id": 20102,
+    "kind": "single",
+    "domain": "Security Operations",
+    "topic": "Case 001: Payroll Phishing - Log Correlation",
+    "qtype": "MOST LIKELY",
+    "difficulty": "Hard",
+    "question": "CASE FILE 001 \u2014 Evidence Locker Update\n\nEDR Timeline for WS-PAY-014:\n08:17:22  User opened Updated_Payroll_Adjustments.docm\n08:17:25  WINWORD.EXE spawned powershell.exe -NoP -W Hidden -EncodedCommand <redacted>\n08:17:26  Defender blocked powershell.exe\n08:17:28  WINWORD.EXE wrote C:\\Users\\Public\\Libraries\\msupd.dll\n08:18:02  rundll32.exe attempted to load C:\\Users\\Public\\Libraries\\msupd.dll\n08:18:03  Defender quarantined msupd.dll\n\nDNS:\n08:17:30  WS-PAY-014 queried payroll-adjustment-check[.]com\n\nWhat is the MOST likely conclusion?",
+    "options": [
+      "The DNS lookup proves data exfiltration occurred.",
+      "The activity is normal macro behavior because rundll32.exe is a Windows binary.",
+      "The attack was fully prevented because PowerShell was blocked.",
+      "The document likely attempted multiple execution methods, and the host should remain in scope."
+    ],
+    "answer": [
+      3
+    ],
+    "select_limit": 1,
+    "why_correct": "Even though PowerShell was blocked, the document wrote a DLL and attempted execution through rundll32.exe.",
+    "trap": "A single blocked process is not the same as full prevention.",
+    "takeaway": "Look for the complete activity chain, not only the first detection event.",
+    "mistake_type": "Stopping investigation after one security control alert",
+    "why_wrong": {
+      "2": "The timeline shows additional file write and DLL execution attempts.",
+      "1": "rundll32.exe is legitimate, but attackers commonly abuse legitimate Windows binaries.",
+      "0": "A DNS lookup alone does not prove exfiltration."
+    },
+    "pack": "Pack 2A v1",
+    "case_file": "Case 001"
+  },
+  {
+    "id": 20103,
+    "kind": "multi",
+    "domain": "Incident Response",
+    "topic": "Case 001: Payroll Phishing - Scope",
+    "qtype": "SELECT THREE",
+    "difficulty": "Hard",
+    "question": "CASE FILE 001 \u2014 Scope Determination\n\nThe SOC manager asks whether the incident is limited to WS-PAY-014.\n\nWhich evidence sources are MOST useful for determining whether the phishing campaign affected other users? Select THREE.",
+    "options": [
+      "The workstation user's monitor size and assigned office location.",
+      "DNS logs showing other internal hosts resolving payroll-adjustment-check[.]com.",
+      "Proxy logs showing outbound sessions to the suspicious domain or IP.",
+      "The printer logs for the payroll department.",
+      "Email gateway logs showing recipients of the original message and password follow-up email."
+    ],
+    "answer": [
+      1,
+      2,
+      4
+    ],
+    "select_limit": 3,
+    "why_correct": "Email logs identify who received the lure. DNS and proxy logs identify which systems attempted to resolve or communicate with suspicious infrastructure.",
+    "trap": "Pick evidence that helps determine breadth of impact, not random asset details.",
+    "takeaway": "Scope is determined by correlating delivery, execution, and network telemetry.",
+    "mistake_type": "Choosing irrelevant evidence for scope",
+    "why_wrong": {
+      "0": "Physical office details do not determine campaign impact.",
+      "3": "Printer logs are not relevant to phishing delivery, execution, or network communication."
+    },
+    "pack": "Pack 2A v1",
+    "case_file": "Case 001"
+  },
+  {
+    "id": 20104,
+    "kind": "single",
+    "domain": "Incident Response",
+    "topic": "Case 001: Payroll Phishing - Containment",
+    "qtype": "BEST",
+    "difficulty": "Hard",
+    "question": "CASE FILE 001 \u2014 Business Constraint\n\nPayroll processing is due in four hours. The affected workstation WS-PAY-014 is used by one payroll specialist, but the payroll application itself is hosted on a separate server. EDR shows the workstation attempted suspicious execution, but there is no evidence the payroll server was compromised.\n\nWhich containment approach is BEST?",
+    "options": [
+      "Power off the payroll server immediately to prevent any possible spread.",
+      "Do not contain anything until payroll processing is complete.",
+      "Delete the suspicious DLL from WS-PAY-014 and allow the user to continue working.",
+      "Isolate WS-PAY-014 from the network while preserving evidence and provide the user a clean workstation for payroll duties."
+    ],
+    "answer": [
+      3
+    ],
+    "select_limit": 1,
+    "why_correct": "This balances containment and business continuity. The suspected endpoint is isolated, evidence is preserved, and payroll can continue from a clean system.",
+    "trap": "The most disruptive action is not always the best action.",
+    "takeaway": "Contain the affected asset while minimizing unnecessary business disruption.",
+    "mistake_type": "Choosing unnecessarily disruptive containment",
+    "why_wrong": {
+      "0": "There is no evidence the payroll server is compromised.",
+      "1": "Waiting could allow persistence or lateral movement.",
+      "2": "Deleting files destroys evidence and may not remove persistence."
+    },
+    "pack": "Pack 2A v1",
+    "case_file": "Case 001"
+  },
+  {
+    "id": 20105,
+    "kind": "single",
+    "domain": "Reporting and Communication",
+    "topic": "Case 001: Payroll Phishing - Executive Communication",
+    "qtype": "MOST APPROPRIATE",
+    "difficulty": "Hard",
+    "question": "CASE FILE 001 \u2014 Executive Update\n\nThe CISO asks for a short update for senior leadership. The investigation is active. One workstation is isolated. Several other recipients are being reviewed. No confirmed data exfiltration has been identified.\n\nWhich statement is MOST appropriate?",
+    "options": [
+      "All payroll employee passwords have been compromised and must be reset immediately.",
+      "The ransomware campaign has been fully contained and there is no risk to payroll.",
+      "A payroll workstation executed malware, but EDR blocked PowerShell. The hash is 93f2... and the technique is T1059.001.",
+      "A phishing email targeted payroll staff. One workstation showed attempted malicious execution and has been isolated. The team is reviewing email and network logs to determine scope; data exposure is not confirmed."
+    ],
+    "answer": [
+      3
+    ],
+    "select_limit": 1,
+    "why_correct": "The statement is accurate, concise, business-focused, and avoids overstating what is known.",
+    "trap": "For executives, prioritize business impact, current status, and validated facts over raw technical details.",
+    "takeaway": "Audience matters. Executives need clear risk and status, not just IOCs.",
+    "mistake_type": "Answering for a technical audience instead of leadership",
+    "why_wrong": {
+      "2": "Too technical for senior leadership and lacks business context.",
+      "1": "The investigation is still active, so this overstates certainty.",
+      "0": "The scenario does not confirm credential compromise."
+    },
+    "pack": "Pack 2A v1",
+    "case_file": "Case 001"
+  },
+  {
+    "id": 20106,
+    "kind": "single",
+    "domain": "Incident Response",
+    "topic": "Case 001: PBQ - Incident Timeline",
+    "qtype": "PBQ ORDERING",
+    "difficulty": "Hard",
+    "question": "CASE FILE 001 \u2014 PBQ: Build the Incident Timeline\n\nWhich sequence BEST represents the attack timeline?\n\nA. User opened Updated_Payroll_Adjustments.docm\nB. WINWORD.EXE spawned encoded PowerShell\nC. WINWORD.EXE wrote msupd.dll\nD. rundll32.exe attempted to load msupd.dll\nE. Defender quarantined msupd.dll",
+    "options": [
+      "A, B, C, D, E",
+      "D, A, B, C, E",
+      "A, C, B, E, D",
+      "B, A, C, E, D"
+    ],
+    "answer": [
+      0
+    ],
+    "select_limit": 1,
+    "why_correct": "The order follows the evidence: document opened, PowerShell spawned, DLL written, DLL load attempted, then quarantine.",
+    "trap": "PBQs often include similar events. Follow timestamps and causality.",
+    "takeaway": "Timeline questions reward careful evidence sequencing.",
+    "mistake_type": "Misordering attack events",
+    "why_wrong": {
+      "3": "The PowerShell event cannot happen before the document is opened.",
+      "2": "The DLL write occurred after PowerShell spawned.",
+      "1": "The DLL load attempt cannot happen before the document execution chain begins."
+    },
+    "pack": "Pack 2A v1",
+    "case_file": "Case 001"
+  },
+  {
+    "id": 20201,
+    "kind": "single",
+    "domain": "Vulnerability Management",
+    "topic": "Case 002: VPN Authentication Bypass - Prioritization",
+    "qtype": "FIRST",
+    "difficulty": "Hard",
+    "question": "CASE FILE 002 \u2014 VPN Authentication Bypass\n\nEnvironment:\n- The organization uses a VPN appliance for all remote employees.\n- A vendor advisory reports an authentication bypass vulnerability.\n- CVSS: 8.2\n- Exploit code is public.\n- The appliance is internet-facing.\n- Threat intelligence reports active exploitation by ransomware affiliates.\n- A separate internal lab server has a CVSS 9.8 RCE but is segmented and contains no sensitive data.\n\nWhich vulnerability should be remediated FIRST?",
+    "options": [
+      "The internal lab server because it has the highest CVSS score.",
+      "Both should be deferred until the monthly patch cycle to avoid operational disruption.",
+      "The VPN appliance only if the scanner increases the score to critical.",
+      "The VPN appliance because it is internet-facing, exploited in the wild, and business critical."
+    ],
+    "answer": [
+      3
+    ],
+    "select_limit": 1,
+    "why_correct": "Internet exposure, public exploit code, active exploitation, and business criticality make the VPN vulnerability the higher practical risk.",
+    "trap": "CompTIA frequently tests whether you prioritize real-world risk over the highest numeric score.",
+    "takeaway": "Prioritization should include exploitability, exposure, threat activity, and asset criticality.",
+    "mistake_type": "Over-prioritizing CVSS over business risk",
+    "why_wrong": {
+      "0": "The lab server has a higher score, but lower exposure and lower business impact.",
+      "1": "Active exploitation and internet exposure make waiting too risky.",
+      "2": "Threat intelligence and exposure can elevate priority even if the scanner score remains unchanged."
+    },
+    "pack": "Pack 2A v1",
+    "case_file": "Case 002"
+  },
+  {
+    "id": 20202,
+    "kind": "single",
+    "domain": "Security Operations",
+    "topic": "Case 002: VPN Logs - Detection",
+    "qtype": "MOST LIKELY",
+    "difficulty": "Hard",
+    "question": "CASE FILE 002 \u2014 Evidence Locker Update\n\nVPN logs show:\n02:14:03  auth_result=success user=svc-vpn-sync src_ip=185.199.XX.14 mfa=not_required\n02:14:08  config_export initiated by svc-vpn-sync\n02:15:42  new local admin account created: temp_support\n02:16:10  outbound connection from VPN appliance to 45.77.XX.20 over TCP/443\n\nThe service account normally authenticates only from an internal management subnet.\n\nWhat is the MOST likely explanation?",
+    "options": [
+      "Normal remote user authentication.",
+      "Successful exploitation or credential abuse involving the VPN appliance.",
+      "A vulnerability scan using authenticated credentials.",
+      "Expected vendor maintenance activity."
+    ],
+    "answer": [
+      1
+    ],
+    "select_limit": 1,
+    "why_correct": "The source, account, missing MFA, configuration export, local admin creation, and outbound traffic strongly suggest compromise.",
+    "trap": "A successful login is not automatically benign when context is abnormal.",
+    "takeaway": "Authentication logs become meaningful when correlated with administrative actions.",
+    "mistake_type": "Evaluating login success without context",
+    "why_wrong": {
+      "3": "Vendor maintenance is not established and the behavior is suspicious.",
+      "0": "A service account creating local admin accounts and exporting configs is not normal user VPN behavior.",
+      "2": "A scan would not typically create a local admin account or export device configuration."
+    },
+    "pack": "Pack 2A v1",
+    "case_file": "Case 002"
+  },
+  {
+    "id": 20203,
+    "kind": "multi",
+    "domain": "Incident Response",
+    "topic": "Case 002: VPN - Containment",
+    "qtype": "SELECT TWO",
+    "difficulty": "Hard",
+    "question": "CASE FILE 002 \u2014 Containment Decision\n\nThe VPN appliance is suspected of compromise. Remote employees depend on VPN access, but the appliance may be creating unauthorized accounts and communicating externally.\n\nWhich actions BEST support containment while preserving investigative value? Select TWO.",
+    "options": [
+      "Preserve VPN appliance logs and configuration before making destructive changes.",
+      "Ignore the issue until after business hours because remote access is business critical.",
+      "Disable or rotate the suspected service account credentials and revoke active sessions.",
+      "Post the suspected attacker IPs in a company-wide email.",
+      "Delete all VPN logs to prevent attackers from seeing investigation activity."
+    ],
+    "answer": [
+      0,
+      2
+    ],
+    "select_limit": 2,
+    "why_correct": "Credential/session containment reduces attacker access, while preserving logs and configuration supports forensic analysis.",
+    "trap": "Containment and evidence preservation often need to happen together.",
+    "takeaway": "For appliance compromise, preserve configuration/logs and cut off unauthorized access paths.",
+    "mistake_type": "Destroying evidence or delaying containment",
+    "why_wrong": {
+      "4": "Deleting logs destroys evidence.",
+      "1": "Waiting can allow further compromise.",
+      "3": "Company-wide IOC disclosure is not an appropriate containment action."
+    },
+    "pack": "Pack 2A v1",
+    "case_file": "Case 002"
+  },
+  {
+    "id": 20204,
+    "kind": "single",
+    "domain": "Reporting and Communication",
+    "topic": "Case 002: VPN - Stakeholder Communication",
+    "qtype": "MOST APPROPRIATE",
+    "difficulty": "Hard",
+    "question": "CASE FILE 002 \u2014 Business Communication\n\nIT leadership asks why emergency maintenance is needed for the VPN appliance during business hours.\n\nWhich explanation is MOST appropriate?",
+    "options": [
+      "The VPN appliance shows signs of possible unauthorized administrative activity. Emergency action is needed to reduce the risk of unauthorized remote access while preserving logs for investigation.",
+      "The SOC detected TCP/443 traffic to an IP address and therefore the VPN is definitely exfiltrating data.",
+      "The device is vulnerable to CVE-style exploitation, and the CVSS vector has high attack complexity but low privileges required.",
+      "We are shutting down remote access because all remote employees are compromised."
+    ],
+    "answer": [
+      0
+    ],
+    "select_limit": 1,
+    "why_correct": "This is clear, risk-focused, and avoids unsupported claims.",
+    "trap": "Communicate validated risk and operational need without exaggeration.",
+    "takeaway": "Leadership communication should connect security action to business risk.",
+    "mistake_type": "Overstating certainty in communications",
+    "why_wrong": {
+      "2": "Too technical and does not clearly explain the business need.",
+      "3": "The scenario does not show all remote employees are compromised.",
+      "1": "Outbound traffic alone does not prove exfiltration."
+    },
+    "pack": "Pack 2A v1",
+    "case_file": "Case 002"
+  },
+  {
+    "id": 20205,
+    "kind": "multi",
+    "domain": "Security Operations",
+    "topic": "Case 002: PBQ - VPN Evidence",
+    "qtype": "PBQ SELECT THREE",
+    "difficulty": "Hard",
+    "question": "CASE FILE 002 \u2014 PBQ: Identify High-Value Evidence\n\nYou are building the evidence package for a suspected VPN appliance compromise.\n\nWhich THREE artifacts are most useful? Select THREE.",
+    "options": [
+      "Marketing website page-view analytics.",
+      "Network flow logs showing outbound connections from the VPN appliance.",
+      "Configuration export records and administrative audit logs.",
+      "Authentication logs showing source IP, account used, MFA status, and session creation.",
+      "The cafeteria door access logs for the same day."
+    ],
+    "answer": [
+      1,
+      2,
+      3
+    ],
+    "select_limit": 3,
+    "why_correct": "Authentication, administrative audit/configuration, and network flow logs directly support investigation of unauthorized access and follow-on activity.",
+    "trap": "Evidence should map directly to the suspected compromise path.",
+    "takeaway": "For infrastructure appliance compromise, prioritize auth logs, admin audit logs, configs, and network flows.",
+    "mistake_type": "Selecting evidence unrelated to the suspected attack path",
+    "why_wrong": {
+      "4": "Physical cafeteria logs do not support investigation of VPN appliance compromise.",
+      "0": "Marketing page analytics are unrelated."
+    },
+    "pack": "Pack 2A v1",
+    "case_file": "Case 002"
+  },
+  {
+    "id": 20301,
+    "kind": "single",
+    "domain": "Incident Response",
+    "topic": "Case 003: Ransomware - First Action",
+    "qtype": "FIRST",
+    "difficulty": "Hard",
+    "question": "CASE FILE 003 \u2014 Ransomware Investigation\n\nA user reports that files on a shared drive now have a .locked extension. A ransom note appears on WS-FIN-022. EDR reports that the host is still online and has active SMB sessions to two file servers. Backup status is unknown.\n\nWhat should the analyst do FIRST?",
+    "options": [
+      "Run a vulnerability scan against all file servers.",
+      "Isolate WS-FIN-022 from the network to stop further encryption activity.",
+      "Restore the affected file shares from backup.",
+      "Pay the ransom to obtain the decryption key."
+    ],
+    "answer": [
+      1
+    ],
+    "select_limit": 1,
+    "why_correct": "The host is still online and has active SMB sessions. Immediate containment is needed to prevent additional encryption.",
+    "trap": "Recovery before containment can allow reinfection or continued damage.",
+    "takeaway": "For active ransomware, contain first, then scope, eradicate, and recover.",
+    "mistake_type": "Recovering before containment",
+    "why_wrong": {
+      "2": "Restoring before containment can result in restored data being encrypted again.",
+      "3": "Paying is not the first incident response action and does not guarantee recovery.",
+      "0": "A scan does not stop active encryption."
+    },
+    "pack": "Pack 2A v1",
+    "case_file": "Case 003"
+  },
+  {
+    "id": 20302,
+    "kind": "single",
+    "domain": "Security Operations",
+    "topic": "Case 003: Ransomware - Patient Zero",
+    "qtype": "MOST LIKELY",
+    "difficulty": "Hard",
+    "question": "CASE FILE 003 \u2014 Evidence Locker Update\n\nFile server logs:\n09:41:12  WS-FIN-022 opened 8,432 files over SMB\n09:42:55  WS-FIN-022 renamed files with .locked extension\n09:44:03  WS-FIN-022 wrote ransom_note.txt to multiple directories\n\nEndpoint timeline:\n09:38:04  user opened Invoice_Overdue.iso\n09:38:20  wscript.exe launched from mounted ISO\n09:39:11  vssadmin.exe delete shadows /all /quiet\n09:40:02  suspicious process began SMB enumeration\n\nWhich host is MOST likely patient zero?",
+    "options": [
+      "The domain controller because authentication is required for SMB.",
+      "The backup server because shadow copies were deleted.",
+      "WS-FIN-022 because it initiated mass file access and encryption activity.",
+      "One of the file servers because the encrypted files are stored there."
+    ],
+    "answer": [
+      2
+    ],
+    "select_limit": 1,
+    "why_correct": "WS-FIN-022 opened and renamed large numbers of files and shows malicious execution before encryption began.",
+    "trap": "Do not confuse impacted storage locations with the host that initiated the attack.",
+    "takeaway": "Patient zero is identified by initial execution and first malicious activity.",
+    "mistake_type": "Confusing impacted asset with initiating host",
+    "why_wrong": {
+      "3": "The file servers were impacted, but WS-FIN-022 initiated the activity.",
+      "0": "Authentication dependency does not make the domain controller patient zero.",
+      "1": "The command deleted local shadow copies on the endpoint; it does not prove the backup server initiated the attack."
+    },
+    "pack": "Pack 2A v1",
+    "case_file": "Case 003"
+  },
+  {
+    "id": 20303,
+    "kind": "multi",
+    "domain": "Incident Response",
+    "topic": "Case 003: Ransomware - Eradication",
+    "qtype": "SELECT TWO",
+    "difficulty": "Hard",
+    "question": "CASE FILE 003 \u2014 Eradication Planning\n\nContainment is complete. WS-FIN-022 is isolated. No additional encryption activity is observed. The team is preparing eradication.\n\nWhich actions are MOST appropriate during eradication? Select TWO.",
+    "options": [
+      "Remove malware, persistence mechanisms, and unauthorized scheduled tasks from affected systems.",
+      "Reset credentials that may have been exposed or used by the ransomware process.",
+      "Restore file shares before confirming malware and persistence are removed.",
+      "Immediately conduct lessons learned before removing persistence.",
+      "Disable all security logging to improve performance during recovery."
+    ],
+    "answer": [
+      0,
+      1
+    ],
+    "select_limit": 2,
+    "why_correct": "Eradication focuses on removing malware/persistence and eliminating attacker access, including potentially compromised credentials.",
+    "trap": "Do not confuse eradication with recovery or lessons learned.",
+    "takeaway": "Containment stops spread; eradication removes the cause; recovery restores operations.",
+    "mistake_type": "Mixing incident response phases",
+    "why_wrong": {
+      "3": "Lessons learned occurs after recovery.",
+      "2": "Restoring before eradication risks reinfection.",
+      "4": "Disabling logging reduces visibility when it is needed most."
+    },
+    "pack": "Pack 2A v1",
+    "case_file": "Case 003"
+  },
+  {
+    "id": 20304,
+    "kind": "single",
+    "domain": "Reporting and Communication",
+    "topic": "Case 003: Ransomware - Executive Update",
+    "qtype": "MOST APPROPRIATE",
+    "difficulty": "Hard",
+    "question": "CASE FILE 003 \u2014 Executive Briefing\n\nExecutives ask whether the organization should make a public statement. Current facts:\n- One workstation initiated encryption activity against shared drives.\n- Containment has stopped active encryption.\n- Impact assessment is ongoing.\n- No confirmed evidence of data exfiltration yet.\n- Legal and communications teams are engaged.\n\nWhich response is MOST appropriate?",
+    "options": [
+      "Delay all communication indefinitely until every file is restored.",
+      "Publicly state that no data was stolen because exfiltration has not been confirmed.",
+      "Coordinate with legal and communications teams and prepare fact-based messaging while impact and notification obligations are assessed.",
+      "Publicly disclose all technical indicators immediately so customers know the SOC is working."
+    ],
+    "answer": [
+      2
+    ],
+    "select_limit": 1,
+    "why_correct": "The response is accurate and process-focused. It recognizes that legal and communications teams should guide external messaging while facts are validated.",
+    "trap": "Absence of confirmed exfiltration is not proof that no data was stolen.",
+    "takeaway": "Incident communication must be accurate, coordinated, and based on validated facts.",
+    "mistake_type": "Communicating certainty before facts are validated",
+    "why_wrong": {
+      "1": "This overstates certainty.",
+      "3": "Technical indicators are not usually appropriate for broad public communication.",
+      "0": "Waiting indefinitely may conflict with legal, regulatory, or business obligations."
+    },
+    "pack": "Pack 2A v1",
+    "case_file": "Case 003"
+  },
+  {
+    "id": 20305,
+    "kind": "single",
+    "domain": "Incident Response",
+    "topic": "Case 003: PBQ - IR Sequence",
+    "qtype": "PBQ ORDERING",
+    "difficulty": "Hard",
+    "question": "CASE FILE 003 \u2014 PBQ: Ransomware Response Sequence\n\nChoose the BEST sequence for the ransomware response.\n\nA. Restore data from known-good backups.\nB. Isolate the actively encrypting workstation.\nC. Validate scope and identify affected systems.\nD. Remove malware and persistence.\nE. Conduct lessons learned and update playbooks.\n\nWhich sequence is BEST?",
+    "options": [
+      "C, A, B, D, E",
+      "B, A, D, C, E",
+      "D, B, C, A, E",
+      "A, B, C, D, E",
+      "B, C, D, A, E"
+    ],
+    "answer": [
+      4
+    ],
+    "select_limit": 1,
+    "why_correct": "The best sequence is contain active encryption, validate scope, eradicate malware/persistence, restore from clean backups, then conduct lessons learned.",
+    "trap": "Restoring before containment or eradication is a common exam trap.",
+    "takeaway": "For ransomware, think: contain, scope, eradicate, recover, lessons learned.",
+    "mistake_type": "Restoring before containment/eradication",
+    "why_wrong": {
+      "3": "Recovery is first, which risks reinfection.",
+      "0": "Active encryption requires immediate containment before full analysis.",
+      "2": "Eradication before containment may allow continued spread.",
+      "1": "Restoring before scope and eradication is risky."
+    },
+    "pack": "Pack 2A v1",
+    "case_file": "Case 003"
+  }
+]

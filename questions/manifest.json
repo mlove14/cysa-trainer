@@ -5,6 +5,12 @@
       "title": "Pack 1: Foundation Exam Logic",
       "file": "questions/pack1.json",
       "count": 5
+    },
+    {
+      "id": "pack2a-v1",
+      "title": "Pack 2A v1: Case Files 001-003",
+      "file": "questions/pack2a-v1.json",
+      "count": 16
     }
   ]
 }
