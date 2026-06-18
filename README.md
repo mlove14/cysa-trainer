@@ -1,5 +1,5 @@
-# CySA+ Coach Release 3
+# CySA+ Coach Release 3.1
 
-Adds Practice Mode, Exam Mode, side navigator, persistent answer highlighting, saved flags, favorites, and review lists.
+Fixes navigator status: selected-but-not-submitted questions show as neutral, not green/answered. Green checkmarks only appear after submission/grading.
 
 Upload contents to GitHub repo root.
