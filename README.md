@@ -1,5 +1,5 @@
-# CySA+ Coach Release 3.1
+# CySA+ Coach Release 4
 
-Fixes navigator status: selected-but-not-submitted questions show as neutral, not green/answered. Green checkmarks only appear after submission/grading.
+Adds exam-style unanswered tracking, Review Unanswered, updated navigator statuses, visible v4.0 badge, and cache-busting support.
 
 Upload contents to GitHub repo root.
