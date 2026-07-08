@@ -1,1 +1,0 @@
-Release check placeholder for Exam Simulator Release 1 clean branch.
