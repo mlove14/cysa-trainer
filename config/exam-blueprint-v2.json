@@ -1,0 +1,66 @@
+{
+  "version": "2.0.0",
+  "exam": {
+    "question_count": 85,
+    "duration_minutes": 165,
+    "pbq_range": [2, 4],
+    "pbqs_first": true
+  },
+  "domain_weights": {
+    "Security Operations": 0.33,
+    "Vulnerability Management": 0.30,
+    "Incident Response and Management": 0.20,
+    "Reporting and Communication": 0.17
+  },
+  "difficulty_mix": {
+    "medium": 0.35,
+    "hard": 0.50,
+    "exam_killer": 0.15
+  },
+  "single_answer_distribution": {
+    "strategy": "balanced_random",
+    "maximum_letter_difference": 1,
+    "letters": ["A", "B", "C", "D"],
+    "preserve_within_attempt": true,
+    "reshuffle_between_attempts": true
+  },
+  "multi_select": {
+    "target_fraction": 0.18,
+    "allowed_select_counts": [2, 3],
+    "avoid_repeating_combinations": true,
+    "balance_letter_frequency": true
+  },
+  "question_rules": {
+    "independent_mcq_majority": true,
+    "linked_case_questions_max_fraction": 0.10,
+    "require_plausible_distractors": true,
+    "distractor_patterns": [
+      "correct_action_wrong_timing",
+      "correct_action_wrong_scope",
+      "technically_true_does_not_answer",
+      "overreaction",
+      "insufficient_evidence",
+      "confuse_related_tool_or_protocol"
+    ],
+    "show_domain_during_exam": false,
+    "show_difficulty_during_exam": false,
+    "show_score_during_exam": false
+  },
+  "selection": {
+    "objective_weighted": true,
+    "prevent_duplicates": true,
+    "pbqs_before_mcqs": true,
+    "weak_area_bias_modes": ["review_missed", "final_72_hours"],
+    "standard_modes": [10, 25, 50, 85]
+  },
+  "review": {
+    "show_correct_answer": true,
+    "show_why_best": true,
+    "show_second_best_trap": true,
+    "show_key_clue": true,
+    "show_objective": true,
+    "show_domain_breakdown": true,
+    "show_objective_breakdown": true,
+    "show_answer_letter_distribution": true
+  }
+}
