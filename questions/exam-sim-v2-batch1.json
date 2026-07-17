@@ -1,0 +1,1300 @@
+[
+  {
+    "id": 30201,
+    "domain": "Security Operations",
+    "objective": "Analyze indicators of potentially malicious activity",
+    "tier": 2,
+    "difficulty": "Practice",
+    "topic": "Windows process triage",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "NEXT",
+    "qtype": "SINGLE",
+    "question": "An analyst sees Event ID 4688 for cmd.exe with parent process winword.exe and an EDR alert for the same host. What should the analyst do NEXT?",
+    "options": [
+      "Review the command line and user context in the 4688 event",
+      "Collect a forensic image before examining the event details",
+      "Isolate the endpoint based on the parent-child relationship alone",
+      "Search all endpoints for cmd.exe executions during the same hour"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Event 4688 records process creation; its command line, parent, account, and timestamp can confirm whether the Office child process is suspicious before broader action.",
+    "why_correct": "Reviewing the event supplies the most direct missing context and supports proportional triage.",
+    "why_wrong": {
+      "1": "Imaging preserves evidence, but it delays the direct, low-impact validation available in the existing event.",
+      "2": "Isolation may become appropriate, but the two-source alert still lacks command-line and user context.",
+      "3": "An enterprise hunt may help later, but cmd.exe is common and an unrefined search creates noise before the local event is validated."
+    },
+    "second_best": "Collect a forensic image before examining the event details — Imaging preserves evidence, but it delays the direct, low-impact validation available in the existing event.",
+    "key_clue": "The unusual Office-to-command-shell parent-child relationship.",
+    "trap": "Treating an alert as proof of enterprise-wide compromise.",
+    "takeaway": "Use native process-creation telemetry to validate an endpoint alert before escalating.",
+    "concept_tags": [
+      "Windows",
+      "Event ID 4688",
+      "EDR",
+      "process tree"
+    ],
+    "mistake_type": "premature containment",
+    "objective_id": "1.2",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "plausible_misconception",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "One-step endpoint triage with a credible evidence-preservation alternative."
+  },
+  {
+    "id": 30202,
+    "domain": "Security Operations",
+    "objective": "Analyze indicators of potentially malicious activity",
+    "tier": 2,
+    "difficulty": "Practice",
+    "topic": "Linux authentication logs",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "MOST likely",
+    "qtype": "SINGLE",
+    "question": "/var/log/auth.log shows 40 failed SSH logins for svc-backup from 198.51.100.8, followed by one success. The account normally runs only local jobs. What is MOST likely?",
+    "options": [
+      "A backup operator tested remote access after rotating the service key",
+      "A credential-compromise attempt that may have succeeded",
+      "A monitoring probe used a stale password before its credential synchronized",
+      "An administrator temporarily enabled SSH for troubleshooting"
+    ],
+    "answer": [
+      1
+    ],
+    "explanation": "Repeated remote failures followed by success, combined with an account that should not log in remotely, strongly indicates attempted credential abuse and possible compromise.",
+    "why_correct": "The sequence and violation of the account baseline support credential compromise.",
+    "why_wrong": {
+      "0": "This is possible, but it conflicts with the local-only baseline and should have a documented change source.",
+      "2": "A stale integration can create failures, but the external source and subsequent success require compromise triage.",
+      "3": "Authorized troubleshooting is plausible, but it does not explain the undocumented behavior from an unfamiliar external address."
+    },
+    "second_best": "A backup operator tested remote access after rotating the service key — This is possible, but it conflicts with the local-only baseline and should have a documented change source.",
+    "key_clue": "A local-only service account succeeds after many remote failures.",
+    "trap": "Reading the successful login without the preceding failures or baseline.",
+    "takeaway": "Correlate authentication sequence with expected account behavior.",
+    "concept_tags": [
+      "Linux",
+      "SSH",
+      "auth.log",
+      "credential access"
+    ],
+    "mistake_type": "baseline neglect",
+    "objective_id": "1.2",
+    "distractor_quality": {
+      "0": "credible_runner_up",
+      "2": "plausible_misconception",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Baseline deviation distinguishes compromise from plausible administrative activity."
+  },
+  {
+    "id": 30203,
+    "domain": "Security Operations",
+    "objective": "Explain concepts related to attack methodology frameworks",
+    "tier": 2,
+    "difficulty": "Practice",
+    "topic": "MITRE ATT&CK mapping",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "BEST",
+    "qtype": "SINGLE",
+    "question": "A Linux web server records curl downloading /tmp/u.sh, then bash executes that file. Which MITRE ATT&CK technique is the BEST primary mapping for the execution step?",
+    "options": [
+      "T1059.004 Unix Shell",
+      "T1105 Ingress Tool Transfer",
+      "T1204.002 Malicious File",
+      "T1053.003 Cron"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The execution evidence specifically shows bash interpreting a shell script, which maps to Command and Scripting Interpreter: Unix Shell (T1059.004).",
+    "why_correct": "T1059.004 describes command and script execution through a Unix shell.",
+    "why_wrong": {
+      "1": "curl downloading the file supports T1105, but the question asks for the subsequent execution step.",
+      "2": "A malicious file is involved, but no evidence shows a user initiated its execution.",
+      "3": "A shell script could later be scheduled, but no cron creation or scheduled execution is shown."
+    },
+    "second_best": "T1105 Ingress Tool Transfer — curl downloading the file supports T1105, but the question asks for the subsequent execution step.",
+    "key_clue": "bash executes the downloaded file.",
+    "trap": "Mapping the entire chain to the transfer action instead of the named execution step.",
+    "takeaway": "Map the precise observed behavior, not merely a related stage.",
+    "concept_tags": [
+      "MITRE ATT&CK",
+      "T1059.004",
+      "Linux",
+      "bash"
+    ],
+    "mistake_type": "technique overgeneralization",
+    "objective_id": "3.1",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "plausible_misconception",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Technique mapping requires separating transfer behavior from execution behavior."
+  },
+  {
+    "id": 30204,
+    "domain": "Security Operations",
+    "objective": "Analyze indicators of potentially malicious activity",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Cross-source endpoint correlation",
+    "kind": "multi",
+    "select_limit": 2,
+    "question_type": "BEST",
+    "qtype": "MULTI",
+    "question": "An EDR alert reports rundll32.exe loading C:\\Users\\Public\\x.dll. Which TWO evidence sources would BEST establish the initiating user and whether the host contacted the suspected command server?",
+    "options": [
+      "Windows Event ID 4688 with command-line auditing",
+      "Sysmon Event ID 7 image-load events",
+      "Proxy or DNS logs keyed to the host and timestamp",
+      "Firewall connection logs and DHCP lease history"
+    ],
+    "answer": [
+      0,
+      2
+    ],
+    "explanation": "Process-creation auditing can tie the execution chain to an account, while time-aligned proxy or DNS telemetry can show outbound contact. Together they answer both investigative questions.",
+    "why_correct": "Event 4688 supplies execution/user context and network logs supply destination evidence.",
+    "why_wrong": {
+      "1": "Image-load telemetry validates the DLL load but normally does not establish outbound destination activity.",
+      "3": "These can support network attribution, but neither reliably identifies the user who initiated the process."
+    },
+    "second_best": "Sysmon Event ID 7 image-load events — Image-load telemetry validates the DLL load but normally does not establish outbound destination activity.",
+    "key_clue": "The prompt separately asks who initiated execution and whether outbound contact occurred.",
+    "trap": "Selecting two endpoint-centric or two inventory-centric sources that leave one question unanswered.",
+    "takeaway": "Choose complementary telemetry that answers identity and network-scope questions.",
+    "concept_tags": [
+      "Event ID 4688",
+      "DNS",
+      "proxy",
+      "rundll32",
+      "correlation"
+    ],
+    "mistake_type": "incomplete evidence selection",
+    "objective_id": "1.2",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "3": "credible_runner_up"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Complementary telemetry must satisfy both identity and network-evidence needs."
+  },
+  {
+    "id": 30205,
+    "domain": "Security Operations",
+    "objective": "Analyze indicators of potentially malicious activity",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Windows persistence triage",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "FIRST",
+    "qtype": "SINGLE",
+    "question": "EDR shows powershell.exe creating HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\Updater. Event ID 4104 contains an encoded command, and the user reports opening an invoice. What should the analyst do FIRST?",
+    "options": [
+      "Isolate the host while preserving the script-block and registry evidence",
+      "Capture memory before changing network connectivity",
+      "Disable the affected account and begin tenant-wide sign-in review",
+      "Remove the Run value, preserve its export, and monitor the host"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The correlated user action, encoded PowerShell, and persistence change show a credible active compromise. Isolation limits further activity while retained telemetry supports scoping and eradication.",
+    "why_correct": "Immediate host isolation is proportionate because execution and persistence are already evidenced.",
+    "why_wrong": {
+      "1": "Memory capture is valuable, but allowing an evidenced persistent compromise to remain connected increases immediate risk unless capture is near-instant and controlled.",
+      "2": "Account containment may be warranted, but the evidence currently establishes endpoint execution rather than account reuse across systems.",
+      "3": "This addresses one persistence artifact, but it is eradication before containment and can miss active execution or other persistence."
+    },
+    "second_best": "Capture memory before changing network connectivity — Memory capture is valuable, but allowing an evidenced persistent compromise to remain connected increases immediate risk unless capture is near-instant and controlled.",
+    "key_clue": "Encoded script execution plus a newly created autorun value.",
+    "trap": "Eradicating the visible artifact before containment and scoping.",
+    "takeaway": "When multiple sources confirm active persistence, contain first and preserve evidence.",
+    "concept_tags": [
+      "PowerShell",
+      "Event ID 4104",
+      "registry run key",
+      "persistence"
+    ],
+    "mistake_type": "wrong incident phase",
+    "objective_id": "1.2",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Correlated persistence evidence makes incident-phase sequencing decisive."
+  },
+  {
+    "id": 30206,
+    "domain": "Security Operations",
+    "objective": "Analyze indicators of potentially malicious activity",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Cloud token theft",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "MOST likely",
+    "qtype": "SINGLE",
+    "question": "Identity logs show a successful OIDC sign-in with MFA from the user’s managed laptop. Ten minutes later the same session token accesses mail from an unmanaged device in another country; no new authentication occurs. What is MOST likely?",
+    "options": [
+      "The user established a legitimate roaming session through a corporate cloud proxy",
+      "A session token was stolen and replayed",
+      "The account password was compromised after the MFA sign-in",
+      "An OAuth application used a delegated mail permission"
+    ],
+    "answer": [
+      1
+    ],
+    "explanation": "The later access reuses an already authenticated session from a new device and geography without an authentication event. That pattern supports token replay rather than password use.",
+    "why_correct": "Session theft explains why MFA appears satisfied and why no second login is recorded.",
+    "why_wrong": {
+      "0": "A proxy can change geography, but the unmanaged device attribute and identical token reuse remain inconsistent with the managed-laptop baseline.",
+      "2": "Password compromise could enable access, but a new authentication event would normally be expected rather than reuse of the same session token.",
+      "3": "Delegated access can reach mail without an interactive login, but the evidence identifies reuse of the user session on another device rather than an application identity."
+    },
+    "second_best": "The user established a legitimate roaming session through a corporate cloud proxy — A proxy can change geography, but the unmanaged device attribute and identical token reuse remain inconsistent with the managed-laptop baseline.",
+    "key_clue": "The same token appears on a new unmanaged device without reauthentication.",
+    "trap": "Assuming a prior MFA event proves every subsequent session use is legitimate.",
+    "takeaway": "Correlate token identifiers, device state, geography, and authentication events.",
+    "concept_tags": [
+      "OIDC",
+      "session token",
+      "MFA",
+      "cloud identity"
+    ],
+    "mistake_type": "MFA overconfidence",
+    "objective_id": "1.2",
+    "distractor_quality": {
+      "0": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Token continuity, device state, and authentication absence require correlation."
+  },
+  {
+    "id": 30207,
+    "domain": "Security Operations",
+    "objective": "Perform incident response activities",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Conditional Access response",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "NEXT",
+    "qtype": "SINGLE",
+    "question": "A contractor’s OAuth refresh token is suspected stolen. The account is disabled, but cloud audit logs show an existing application session still reading files. What action is MOST appropriate NEXT?",
+    "options": [
+      "Revoke refresh tokens and active sessions, then investigate application consent",
+      "Reset the password and require MFA re-registration",
+      "Disable the OAuth application after reviewing its publisher",
+      "Block the observed source IP with Conditional Access"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Disabling an account does not always invalidate previously issued tokens immediately. Revocation contains continued access, and consent review checks whether a malicious application retains delegated access.",
+    "why_correct": "Token and session revocation directly stops the observed post-disable access and enables proper scoping.",
+    "why_wrong": {
+      "1": "This helps if primary credentials or MFA methods were compromised, but it does not reliably terminate the active token-backed session.",
+      "2": "Application containment may be needed, but the continued access is through the contractor session and review-first prolongs observed access.",
+      "3": "Source blocking may interrupt one path, but the token can be replayed from another address and active sessions still need revocation."
+    },
+    "second_best": "Reset the password and require MFA re-registration — This helps if primary credentials or MFA methods were compromised, but it does not reliably terminate the active token-backed session.",
+    "key_clue": "File access continues through an existing session after account disablement.",
+    "trap": "Treating account disablement as universal and immediate token revocation.",
+    "takeaway": "Contain cloud identity incidents by revoking sessions and reviewing delegated consent.",
+    "concept_tags": [
+      "OAuth",
+      "refresh token",
+      "Conditional Access",
+      "consent grant"
+    ],
+    "mistake_type": "identity containment gap",
+    "objective_id": "3.2",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Continued post-disable access distinguishes session containment from credential response."
+  },
+  {
+    "id": 30208,
+    "domain": "Security Operations",
+    "objective": "Perform incident response activities",
+    "tier": 4,
+    "difficulty": "Exam Killer",
+    "topic": "SAML session investigation",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "BEST",
+    "qtype": "SINGLE",
+    "question": "A SAML application reports a finance user downloading payroll files. The IdP shows a normal MFA sign-in from the corporate laptop at 09:00. At 09:18 the application logs the same session ID from a hosting-provider IP; EDR on the laptop shows a browser-cookie database copied at 09:12. The laptop must remain online for a live fraud call. What is the BEST immediate action?",
+    "options": [
+      "Revoke the SAML application session and restrict the account while preserving live endpoint telemetry",
+      "Network-isolate the laptop and capture memory before changing the identity session",
+      "Reset the password and force MFA re-registration while monitoring the application",
+      "Block the hosting-provider IP and continue collecting both endpoint and application telemetry"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The application-session evidence and cookie theft indicate session replay. Revoking the session and restricting identity access contains the active cloud path while preserving the explicitly required live endpoint state for the time-sensitive call.",
+    "why_correct": "This option addresses the active stolen session and honors the business constraint without sacrificing evidence.",
+    "why_wrong": {
+      "1": "This preserves endpoint evidence and contains the source device, but it leaves the independently replayed application session active and conflicts with the live-call requirement.",
+      "2": "Credential reset is useful if passwords or MFA factors are compromised, but established SAML application sessions may remain usable.",
+      "3": "IP blocking preserves availability and evidence, but it is narrower than session revocation and is easily bypassed by changing infrastructure."
+    },
+    "second_best": "Network-isolate the laptop and capture memory before changing the identity session — This preserves endpoint evidence and contains the source device, but it leaves the independently replayed application session active and conflicts with the live-call requirement.",
+    "key_clue": "The same application session is reused after cookie theft, and the laptop must temporarily remain online.",
+    "trap": "Containing the endpoint while overlooking an independently usable cloud session.",
+    "takeaway": "In token-replay incidents, contain the session first and adapt endpoint containment to documented business constraints.",
+    "concept_tags": [
+      "SAML",
+      "cookie theft",
+      "session replay",
+      "EDR",
+      "business continuity"
+    ],
+    "mistake_type": "wrong containment target",
+    "objective_id": "3.2",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 5,
+    "reasoning_depth": "evaluation",
+    "distractor_strength": "expert",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Cloud-session containment competes with endpoint evidence and a live business dependency."
+  },
+  {
+    "id": 30209,
+    "domain": "Vulnerability Management",
+    "objective": "Implement vulnerability scanning methods and concepts",
+    "tier": 2,
+    "difficulty": "Practice",
+    "topic": "Authenticated scanning",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "NEXT",
+    "qtype": "SINGLE",
+    "question": "A Linux scanner reports many uncertain package findings because it cannot read installed versions. Scanner logs also show SSH authentication failures. What should the team do NEXT?",
+    "options": [
+      "Provide a least-privileged scan credential and rerun the authenticated scan",
+      "Validate a sample of package versions manually before scheduling another unauthenticated scan",
+      "Use banner-based network detection and lower confidence on unresolved findings",
+      "Run a local package inventory through the endpoint-management agent"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Authenticated access lets the scanner inspect actual package versions and configurations, reducing inference-based uncertainty while limiting credential privileges.",
+    "why_correct": "Fixing the failed authenticated check improves evidence quality before prioritization.",
+    "why_wrong": {
+      "1": "Sampling improves confidence for a few hosts, but it does not correct the systematic credential failure across the scan population.",
+      "2": "This is a viable fallback when credentials cannot be used, but banners are less authoritative than installed-package inspection.",
+      "3": "An agent inventory can supply strong evidence, but restoring a scoped scanner credential preserves the intended repeatable assessment workflow."
+    },
+    "second_best": "Validate a sample of package versions manually before scheduling another unauthenticated scan — Sampling improves confidence for a few hosts, but it does not correct the systematic credential failure across the scan population.",
+    "key_clue": "The scanner explicitly cannot authenticate or read installed versions.",
+    "trap": "Prioritizing low-confidence results without fixing collection quality.",
+    "takeaway": "Validate scan access before treating inferred package findings as facts.",
+    "concept_tags": [
+      "Linux",
+      "authenticated scan",
+      "SSH",
+      "package inventory"
+    ],
+    "mistake_type": "scan-quality neglect",
+    "objective_id": "2.1",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "plausible_misconception",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Assessment confidence must be balanced against viable alternate inventory methods."
+  },
+  {
+    "id": 30210,
+    "domain": "Vulnerability Management",
+    "objective": "Analyze output from vulnerability assessment tools",
+    "tier": 2,
+    "difficulty": "Practice",
+    "topic": "False-positive validation",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "BEST",
+    "qtype": "SINGLE",
+    "question": "A scanner flags an obsolete TLS version on port 443, but openssl s_client fails to negotiate that version and the load balancer configuration disables it. What is the BEST disposition?",
+    "options": [
+      "Document the validation evidence and mark the finding as a likely false positive for review",
+      "Rerun the scan from a second engine before changing status",
+      "Check whether a different virtual host on the same address permits the protocol",
+      "Keep the finding open until the next routine scan confirms the result"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Two independent checks contradict the scanner result. Recording the command output and configuration supports a controlled false-positive disposition and future review.",
+    "why_correct": "The evidence-based disposition preserves auditability without unnecessary remediation.",
+    "why_wrong": {
+      "1": "Independent rescanning adds assurance, but the protocol test and enforcing configuration already provide direct reproducible evidence.",
+      "2": "SNI or virtual-host differences are worth testing, but the current finding should first be documented against the specifically assessed service.",
+      "3": "A later scan can confirm closure, but leaving a contradicted finding active without documenting current validation misstates present risk."
+    },
+    "second_best": "Rerun the scan from a second engine before changing status — Independent rescanning adds assurance, but the protocol test and enforcing configuration already provide direct reproducible evidence.",
+    "key_clue": "Both a protocol test and the enforcing configuration contradict the alert.",
+    "trap": "Closing a finding without retaining reproducible validation evidence.",
+    "takeaway": "Use independent technical evidence and document false-positive decisions.",
+    "concept_tags": [
+      "TLS",
+      "openssl",
+      "false positive",
+      "load balancer"
+    ],
+    "mistake_type": "scanner absolutism",
+    "objective_id": "2.2",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "plausible_misconception",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Independent technical evidence must be weighed against additional confirmation options."
+  },
+  {
+    "id": 30211,
+    "domain": "Vulnerability Management",
+    "objective": "Analyze data to prioritize vulnerabilities",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "KEV prioritization",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "HIGHEST priority",
+    "qtype": "SINGLE",
+    "question": "A KEV-listed authentication bypass affects an internet-facing VPN used by remote staff. A workaround restricts the admin interface but not user authentication. An internal database has a higher-CVSS flaw with no known exploit and strict segmentation. Which has the HIGHEST priority?",
+    "options": [
+      "The VPN authentication bypass",
+      "The internal database flaw because compromise would affect regulated records",
+      "Patch both in the next emergency window without ordering them",
+      "Expand the VPN workaround to monitor authentication while prioritizing the database"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Known exploitation, direct internet exposure, and incomplete compensating controls make the VPN flaw the most immediate practical risk despite the database finding’s higher score.",
+    "why_correct": "The KEV status and reachable vulnerable path outweigh CVSS alone.",
+    "why_wrong": {
+      "1": "Asset impact makes this defensible, but segmentation, no known exploit, and internal exposure reduce its immediate likelihood relative to the VPN.",
+      "2": "Both warrant remediation, but limited response capacity still requires prioritizing the actively exploited exposed path first.",
+      "3": "Monitoring can improve detection but does not block the vulnerable user-authentication path."
+    },
+    "second_best": "The internal database flaw because compromise would affect regulated records — Asset impact makes this defensible, but segmentation, no known exploit, and internal exposure reduce its immediate likelihood relative to the VPN.",
+    "key_clue": "The workaround does not protect the vulnerable user-authentication path.",
+    "trap": "Equating the highest CVSS score with the highest remediation priority.",
+    "takeaway": "Combine KEV, exposure, criticality, exploitability, and control effectiveness.",
+    "concept_tags": [
+      "KEV",
+      "VPN",
+      "CVSS",
+      "compensating control"
+    ],
+    "mistake_type": "CVSS fixation",
+    "objective_id": "2.3",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Threat context and control coverage outweigh severity-only and impact-only choices."
+  },
+  {
+    "id": 30212,
+    "domain": "Vulnerability Management",
+    "objective": "Analyze data to prioritize vulnerabilities",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Risk-based prioritization",
+    "kind": "multi",
+    "select_limit": 2,
+    "question_type": "ANALYSIS",
+    "qtype": "MULTI",
+    "question": "A team must rank four critical scanner findings before a 24-hour change window. Which TWO factors should carry the MOST weight?",
+    "options": [
+      "Whether exploitation is active or the CVE is in KEV",
+      "CVSS base score and vendor severity rating",
+      "External reachability and business criticality of affected assets",
+      "Patch availability and estimated deployment effort"
+    ],
+    "answer": [
+      0,
+      2
+    ],
+    "explanation": "Active exploitation/KEV context and the combination of exposure and business impact most directly estimate likelihood and consequence under a short remediation window.",
+    "why_correct": "These factors distinguish theoretical severity from realizable business risk.",
+    "why_wrong": {
+      "1": "These are useful standardized inputs, but they omit current exploitation, actual reachability, and local business impact.",
+      "3": "Feasibility influences sequencing, but an easy low-risk fix should not displace an actively exploited exposed asset in a constrained window."
+    },
+    "second_best": "CVSS base score and vendor severity rating — These are useful standardized inputs, but they omit current exploitation, actual reachability, and local business impact.",
+    "key_clue": "The constrained window requires factors tied directly to likelihood and consequence.",
+    "trap": "Using administrative convenience as a substitute for risk.",
+    "takeaway": "Prioritize with threat context plus environmental exposure and criticality.",
+    "concept_tags": [
+      "KEV",
+      "asset criticality",
+      "exposure",
+      "exploitability"
+    ],
+    "mistake_type": "administrative prioritization",
+    "objective_id": "2.3",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "3": "credible_runner_up"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "A constrained change window forces likelihood-and-impact prioritization."
+  },
+  {
+    "id": 30213,
+    "domain": "Vulnerability Management",
+    "objective": "Recommend controls to mitigate attacks and software vulnerabilities",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Compensating controls",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "MOST appropriate",
+    "qtype": "SINGLE",
+    "question": "A legacy manufacturing server cannot be patched for 30 days. It has an exploitable web flaw, no direct internet route, and only two jump hosts need access. What is the MOST appropriate interim control?",
+    "options": [
+      "Allowlist the jump hosts at a firewall and monitor web requests until patching",
+      "Place a reverse proxy with request filtering in front of the server",
+      "Shut down the service until the patch window",
+      "Increase EDR monitoring and alert on web-process child processes"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "A narrow network allowlist reduces reachable attack paths while monitoring detects abuse. It is time-bound mitigation suited to the stated operational constraint, not a substitute for the scheduled patch.",
+    "why_correct": "The control materially reduces exposure while retaining necessary access.",
+    "why_wrong": {
+      "1": "Filtering can reduce exploitability, but it retains a broader reachable path than allowing only the two required jump hosts.",
+      "2": "Shutdown removes exposure more completely, but it may halt the stated manufacturing function and is less proportionate when narrow access is possible.",
+      "3": "Detection adds value, but monitoring alone does not reduce the reachable vulnerable surface as effectively as allowlisting."
+    },
+    "second_best": "Place a reverse proxy with request filtering in front of the server — Filtering can reduce exploitability, but it retains a broader reachable path than allowing only the two required jump hosts.",
+    "key_clue": "Only two jump hosts require access and patching has a defined delay.",
+    "trap": "Treating a compensating control as permanent remediation.",
+    "takeaway": "Use narrow, monitored, time-bound controls when patching is temporarily infeasible.",
+    "concept_tags": [
+      "segmentation",
+      "allowlist",
+      "legacy system",
+      "compensating control"
+    ],
+    "mistake_type": "constraint blindness",
+    "objective_id": "2.4",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Availability needs distinguish narrow prevention from shutdown and detection-only controls."
+  },
+  {
+    "id": 30214,
+    "domain": "Vulnerability Management",
+    "objective": "Analyze output from vulnerability assessment tools",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Container finding validation",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "NEXT",
+    "qtype": "SINGLE",
+    "question": "A container scan flags a vulnerable library in an image. The running workload inventory shows the image digest is not deployed, the registry marks it superseded, and CI logs show a fixed image passed testing. What should the analyst do NEXT?",
+    "options": [
+      "Verify production references the fixed digest, then retire the vulnerable image",
+      "Delete the vulnerable image from the registry before checking runtime references",
+      "Rescan the fixed image and close the finding based on CI evidence",
+      "Create a registry policy blocking the vulnerable digest, then wait for the next inventory cycle"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Confirming the deployed digest closes the remaining evidence gap. Retiring the old image then prevents future deployment while preserving a traceable remediation path.",
+    "why_correct": "This validates actual exposure and removes the obsolete vulnerable artifact.",
+    "why_wrong": {
+      "1": "Retirement prevents reuse, but deleting first can remove rollback evidence and does not confirm what production actually runs.",
+      "2": "CI evidence supports the fix, but closure without verifying the production digest leaves deployment exposure unresolved.",
+      "3": "Blocking reuse is valuable, but waiting delays confirmation of the current runtime state."
+    },
+    "second_best": "Delete the vulnerable image from the registry before checking runtime references — Retirement prevents reuse, but deleting first can remove rollback evidence and does not confirm what production actually runs.",
+    "key_clue": "Inventory and CI suggest remediation, but the production digest still needs confirmation.",
+    "trap": "Confusing registry presence with runtime exposure.",
+    "takeaway": "Correlate scan, registry, pipeline, and runtime evidence before closure.",
+    "concept_tags": [
+      "container",
+      "image digest",
+      "CI/CD",
+      "runtime inventory"
+    ],
+    "mistake_type": "asset-state confusion",
+    "objective_id": "2.2",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Runtime, registry, and pipeline evidence must be sequenced before closure."
+  },
+  {
+    "id": 30215,
+    "domain": "Vulnerability Management",
+    "objective": "Analyze data to prioritize vulnerabilities",
+    "tier": 4,
+    "difficulty": "Exam Killer",
+    "topic": "Exception re-evaluation",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "BEST",
+    "qtype": "SINGLE",
+    "question": "A payment API has a critical RCE and appears in KEV. A WAF rule blocks the published exploit pattern, but testing shows alternate encoding bypasses it. Emergency patching risks a 20-minute checkout outage during a product launch; the API is internet-facing and processes card transactions. What is the BEST recommendation?",
+    "options": [
+      "Use the emergency window to patch now, with rollback and business-owner coordination",
+      "Keep the tested WAF rule, add enhanced monitoring, and patch after the launch",
+      "Temporarily restrict the API to established customer networks during the launch",
+      "Take the API offline for the launch and patch outside the emergency process"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "KEV status, internet exposure, payment criticality, and a demonstrably bypassable control create extreme current risk. A planned emergency change with rollback manages availability while removing the vulnerable condition.",
+    "why_correct": "The clue that the WAF can be bypassed makes delayed remediation unacceptable despite a plausible outage concern.",
+    "why_wrong": {
+      "1": "This protects availability and adds detection, but the demonstrated encoding bypass leaves the exposed KEV path inadequately controlled.",
+      "2": "Reachability restrictions could reduce risk, but they may be infeasible for a public checkout and still leave trusted-source exploitation possible.",
+      "3": "Shutdown removes exposure, but it causes greater business impact than a coordinated emergency patch with rollback."
+    },
+    "second_best": "Keep the tested WAF rule, add enhanced monitoring, and patch after the launch — This protects availability and adds detection, but the demonstrated encoding bypass leaves the exposed KEV path inadequately controlled.",
+    "key_clue": "The compensating control fails under tested alternate encoding.",
+    "trap": "Overvaluing nominal control presence instead of tested control effectiveness.",
+    "takeaway": "Emergency remediation is warranted when active exploitation, exposure, criticality, and failed controls converge.",
+    "concept_tags": [
+      "KEV",
+      "WAF bypass",
+      "payment API",
+      "emergency change"
+    ],
+    "mistake_type": "control checkbox thinking",
+    "objective_id": "2.3",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 5,
+    "reasoning_depth": "evaluation",
+    "distractor_strength": "expert",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "A tested control bypass resolves the availability-versus-exploitation tradeoff."
+  },
+  {
+    "id": 30216,
+    "domain": "Incident Response and Management",
+    "objective": "Perform incident response activities",
+    "tier": 2,
+    "difficulty": "Practice",
+    "topic": "Linux containment",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "FIRST",
+    "qtype": "SINGLE",
+    "question": "A Linux host runs an unknown process from /tmp and ss shows it connected to an unfamiliar IP. What should the responder do FIRST?",
+    "options": [
+      "Isolate the host from the network while preserving the live process and connection details",
+      "Capture memory and process details before isolating the host",
+      "Terminate the process and retain a copy of its executable for analysis",
+      "Block the destination IP at the perimeter and monitor the host"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Process and socket evidence indicates active suspicious communication. Network isolation contains it while retaining volatile details for capture and scoping.",
+    "why_correct": "Isolation addresses active risk without immediately destroying the observed evidence.",
+    "why_wrong": {
+      "1": "Volatile capture is valuable and may be first in a controlled setting, but the active unfamiliar connection makes prolonged collection before containment risky.",
+      "2": "Termination interrupts the visible process, but it can lose volatile context and may not contain persistence or other communications.",
+      "3": "Blocking the observed IP is minimally disruptive, but the process can change destinations and the compromised host remains connected internally."
+    },
+    "second_best": "Capture memory and process details before isolating the host — Volatile capture is valuable and may be first in a controlled setting, but the active unfamiliar connection makes prolonged collection before containment risky.",
+    "key_clue": "An unknown /tmp process has an active external socket.",
+    "trap": "Eradicating or rebooting before containment and evidence preservation.",
+    "takeaway": "Contain active communications, then collect and eradicate methodically.",
+    "concept_tags": [
+      "Linux",
+      "ss",
+      "volatile evidence",
+      "containment"
+    ],
+    "mistake_type": "wrong incident phase",
+    "objective_id": "3.2",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "plausible_misconception",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Active communication makes containment timing compete with volatile collection."
+  },
+  {
+    "id": 30217,
+    "domain": "Incident Response and Management",
+    "objective": "Perform incident response activities",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Identity incident containment",
+    "kind": "multi",
+    "select_limit": 2,
+    "question_type": "ANALYSIS",
+    "qtype": "MULTI",
+    "question": "Cloud logs show a user accepted repeated MFA prompts, a new OAuth application received mail-read consent, and an inbox rule began forwarding messages externally. Which TWO actions directly remove the two evidenced persistence mechanisms?",
+    "options": [
+      "Revoke active sessions and tokens",
+      "Remove the malicious consent grant",
+      "Disable the forwarding rule and preserve its audit record",
+      "Disable the user account and reset its password"
+    ],
+    "answer": [
+      1,
+      2
+    ],
+    "explanation": "Removing the delegated application consent and disabling the forwarding rule eliminate the two mechanisms that can persist beyond the initiating interactive activity. Token revocation remains important containment, but it terminates access rather than removing either persistence configuration.",
+    "why_correct": "Consent removal eliminates delegated application access, while rule removal stops the persistent server-side forwarding path.",
+    "why_wrong": {
+      "0": "Session and token revocation is urgent containment, but it does not remove the consent grant or server-side forwarding rule named as persistence mechanisms.",
+      "3": "Account disablement and password reset can restrict interactive access, but they do not reliably remove delegated consent or an existing mailbox rule."
+    },
+    "second_best": "Revoke active sessions and tokens — Session and token revocation is urgent containment, but it does not remove the consent grant or server-side forwarding rule named as persistence mechanisms.",
+    "key_clue": "The question asks to remove persistence configurations, not only terminate current access.",
+    "trap": "Selecting general account containment while leaving delegated consent or a server-side mail rule configured.",
+    "takeaway": "Contain every evidenced identity persistence and exfiltration mechanism.",
+    "concept_tags": [
+      "MFA fatigue",
+      "OAuth consent",
+      "inbox rule",
+      "token revocation"
+    ],
+    "mistake_type": "single-path containment",
+    "objective_id": "3.2",
+    "distractor_quality": {
+      "0": "credible_runner_up",
+      "3": "credible_runner_up"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "The requested persistence scope distinguishes configuration removal from account containment."
+  },
+  {
+    "id": 30218,
+    "domain": "Incident Response and Management",
+    "objective": "Perform incident response activities",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Timeline correlation",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "MOST appropriate",
+    "qtype": "SINGLE",
+    "question": "Email logs show delivery at 14:02, Sysmon Event ID 1 shows wscript.exe at 14:05, DNS logs show a new domain at 14:05, and EDR isolates the host at 14:07. What is the MOST appropriate incident timeline conclusion?",
+    "options": [
+      "The message likely led to script execution and callback before containment",
+      "The attachment likely executed, but the DNS event should be treated as unrelated until packet data is obtained",
+      "The message led to confirmed command-and-control and data exfiltration before isolation",
+      "The gateway delivery is unrelated because EDR isolation prevented endpoint execution"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The aligned delivery, process creation, DNS lookup, and isolation timestamps support a likely chain from delivery through execution and callback attempt. The evidence does not itself prove data transfer.",
+    "why_correct": "This conclusion follows the temporal and host correlation without overstating impact.",
+    "why_wrong": {
+      "1": "Packet data would improve confidence, but tight host and timestamp alignment already supports correlation beyond mere coincidence.",
+      "2": "Execution and lookup are supported, but DNS alone does not prove a completed control channel or transferred data.",
+      "3": "Isolation occurred after the process and DNS events, so it cannot explain away the preceding activity."
+    },
+    "second_best": "The attachment likely executed, but the DNS event should be treated as unrelated until packet data is obtained — Packet data would improve confidence, but tight host and timestamp alignment already supports correlation beyond mere coincidence.",
+    "key_clue": "Process and DNS activity occur on the recipient host three minutes after delivery.",
+    "trap": "Turning correlation into an unsupported claim of confirmed exfiltration.",
+    "takeaway": "Build timelines from multiple sources and distinguish observed facts from conclusions.",
+    "concept_tags": [
+      "Sysmon Event ID 1",
+      "email",
+      "DNS",
+      "timeline"
+    ],
+    "mistake_type": "impact overstatement",
+    "objective_id": "3.2",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Timeline correlation supports a bounded conclusion without asserting unobserved impact."
+  },
+  {
+    "id": 30219,
+    "domain": "Incident Response and Management",
+    "objective": "Explain preparation and post-incident activity phases of the incident response lifecycle",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Recovery decision",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "NEXT",
+    "qtype": "SINGLE",
+    "question": "After ransomware containment, EDR hunts are negative, the initial exposed RDP service is disabled, backups pass malware scanning, and the order system has a four-hour recovery objective. What should happen NEXT?",
+    "options": [
+      "Restore a prioritized pilot system, monitor it, then expand recovery",
+      "Restore all order-system nodes in parallel to meet the recovery objective",
+      "Extend threat hunting through another full business cycle before restoring",
+      "Restore the database tier first and defer application monitoring until service is available"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The access path is closed, scope checks are negative, and backups are validated. A monitored pilot respects the recovery objective while limiting reinfection and operational risk before broader restoration.",
+    "why_correct": "Phased recovery is the safest next step after evidenced containment and eradication checks.",
+    "why_wrong": {
+      "1": "Parallel restoration is faster, but it amplifies reinfection and outage risk without a monitored pilot.",
+      "2": "More hunting improves confidence, but the stated negative hunts, closed entry path, clean backups, and four-hour objective support controlled recovery.",
+      "3": "Dependency-based recovery can be appropriate, but deferring monitoring loses the chance to detect recurrence during the highest-risk stage."
+    },
+    "second_best": "Restore all order-system nodes in parallel to meet the recovery objective — Parallel restoration is faster, but it amplifies reinfection and outage risk without a monitored pilot.",
+    "key_clue": "Validated backups, closed entry path, negative hunts, and a time-bound recovery objective.",
+    "trap": "Waiting for impossible certainty or restoring everything at once.",
+    "takeaway": "Recover in monitored stages after validating eradication and backups.",
+    "concept_tags": [
+      "ransomware",
+      "RDP",
+      "backup validation",
+      "recovery objective"
+    ],
+    "mistake_type": "recovery sequencing",
+    "objective_id": "3.3",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Recovery objectives compete with additional assurance and broad restoration speed."
+  },
+  {
+    "id": 30220,
+    "domain": "Incident Response and Management",
+    "objective": "Perform incident response activities",
+    "tier": 4,
+    "difficulty": "Exam Killer",
+    "topic": "Critical-server containment",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "BEST",
+    "qtype": "SINGLE",
+    "question": "A domain controller logs Event ID 4769 requests for many service accounts from one application server. EDR on that server finds credential-dumping behavior, but the server runs hospital medication workflows and has no hot standby. Firewall logs show it has not contacted other subnets beyond the domain controller. What is the BEST immediate response?",
+    "options": [
+      "Apply tightly scoped network containment that preserves required medication traffic, capture volatile evidence, and prepare failover or downtime coordination",
+      "Power off the server immediately and invoke clinical downtime procedures",
+      "Keep the server online, block only the observed ticket requests, and intensify monitoring",
+      "Reset the targeted service accounts in dependency order before network containment"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The evidence supports credential access on a critical server, while network logs and clinical constraints permit surgical containment. Restricting unnecessary paths, capturing volatile evidence, and coordinating continuity balances attack interruption with patient-safety needs.",
+    "why_correct": "This option contains plausible lateral movement while explicitly maintaining the critical workflow and evidence.",
+    "why_wrong": {
+      "1": "This decisively contains and is defensible for credential dumping, but it loses volatile evidence and imposes patient-safety costs when selective containment is feasible.",
+      "2": "This preserves care delivery, but a compromised server may use other accounts or techniques and remains broadly connected.",
+      "3": "Ordered resets reduce disruption, but changing credentials before containing the source permits continued dumping and can destroy useful live context."
+    },
+    "second_best": "Power off the server immediately and invoke clinical downtime procedures — This decisively contains and is defensible for credential dumping, but it loses volatile evidence and imposes patient-safety costs when selective containment is feasible.",
+    "key_clue": "The server is critical, has no standby, and current traffic scope is narrow enough for selective containment.",
+    "trap": "Choosing maximum technical containment without incorporating life-safety and continuity constraints.",
+    "takeaway": "Use the least disruptive containment that promptly stops evidenced attack paths on safety-critical systems.",
+    "concept_tags": [
+      "Event ID 4769",
+      "credential dumping",
+      "network containment",
+      "patient safety"
+    ],
+    "mistake_type": "business-impact neglect",
+    "objective_id": "3.2",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 5,
+    "reasoning_depth": "evaluation",
+    "distractor_strength": "expert",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Patient safety, volatile evidence, and lateral-movement risk require scoped containment."
+  },
+  {
+    "id": 30221,
+    "domain": "Reporting and Communication",
+    "objective": "Explain the importance of vulnerability management reporting and communication",
+    "tier": 2,
+    "difficulty": "Practice",
+    "topic": "Executive vulnerability summary",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "MOST appropriate",
+    "qtype": "SINGLE",
+    "question": "A monthly scan found 120 high-severity issues, but 90 are on decommissioned assets and 10 internet-facing findings are overdue. Which summary is MOST appropriate for leadership?",
+    "options": [
+      "Ten overdue internet-facing findings need owner action; asset records also require cleanup",
+      "Report all 120 findings, separated by scanner severity, and request emergency remediation",
+      "Report only the ten overdue findings and omit the inventory discrepancy",
+      "Pause SLA reporting until asset owners reconcile every decommissioned record"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The summary separates actionable exposure from data-quality problems and identifies the decision leadership must drive without inflating risk.",
+    "why_correct": "It accurately communicates validated risk and the inventory issue in business terms.",
+    "why_wrong": {
+      "1": "Severity segmentation is better than a raw count, but it still misstates decommissioned assets as current exposure.",
+      "2": "This highlights immediate risk, but omitting the stale-asset issue allows unreliable metrics and recurring noise.",
+      "3": "Inventory cleanup is necessary, but delaying communication hides currently overdue internet-facing risk."
+    },
+    "second_best": "Report all 120 findings, separated by scanner severity, and request emergency remediation — Severity segmentation is better than a raw count, but it still misstates decommissioned assets as current exposure.",
+    "key_clue": "Most findings are stale, but ten reachable findings are overdue.",
+    "trap": "Reporting raw severity counts without validation and exposure context.",
+    "takeaway": "Executive vulnerability reporting should distinguish actionable risk from inventory noise.",
+    "concept_tags": [
+      "executive reporting",
+      "asset inventory",
+      "exposure",
+      "SLA"
+    ],
+    "mistake_type": "raw-count reporting",
+    "objective_id": "4.1",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "plausible_misconception",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Validated exposure must remain visible without allowing inventory noise to inflate risk."
+  },
+  {
+    "id": 30222,
+    "domain": "Reporting and Communication",
+    "objective": "Explain the importance of incident response reporting and communication",
+    "tier": 2,
+    "difficulty": "Practice",
+    "topic": "Incident handoff",
+    "kind": "multi",
+    "select_limit": 2,
+    "question_type": "ANALYSIS",
+    "qtype": "MULTI",
+    "question": "An incident moves from the night shift to the day shift. Which TWO items are MOST important in the handoff?",
+    "options": [
+      "Validated scope, actions completed, and evidence locations",
+      "A complete chronological export of every alert collected overnight",
+      "Outstanding decisions, owners, and next update time",
+      "Preliminary hypotheses and confidence levels with no record of completed actions"
+    ],
+    "answer": [
+      0,
+      2
+    ],
+    "explanation": "A reliable handoff preserves shared situational awareness: what is known, what was done, where evidence resides, and what decisions and communications remain.",
+    "why_correct": "The selected items support continuity, accountability, and timely stakeholder updates.",
+    "why_wrong": {
+      "1": "A chronology can support analysts, but an uncurated export obscures validated scope, decisions, and ownership.",
+      "3": "Qualified hypotheses are useful, but without completed actions and owners the receiving shift cannot safely continue work."
+    },
+    "second_best": "A complete chronological export of every alert collected overnight — A chronology can support analysts, but an uncurated export obscures validated scope, decisions, and ownership.",
+    "key_clue": "The shift change creates risk of lost context and missed decisions.",
+    "trap": "Treating a handoff as an unstructured log dump.",
+    "takeaway": "Incident handoffs require validated status, evidence, ownership, and cadence.",
+    "concept_tags": [
+      "handoff",
+      "incident reporting",
+      "ownership",
+      "communication cadence"
+    ],
+    "mistake_type": "context loss",
+    "objective_id": "4.2",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Operational continuity requires prioritizing status and ownership over raw chronology."
+  },
+  {
+    "id": 30223,
+    "domain": "Reporting and Communication",
+    "objective": "Explain the importance of vulnerability management reporting and communication",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Risk exception communication",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "NEXT",
+    "qtype": "SINGLE",
+    "question": "A business owner requests a 60-day patch delay for a revenue system. The finding is exploitable, internet-facing, and absent from KEV; a tested WAF rule reduces exposure. What should the analyst communicate NEXT?",
+    "options": [
+      "Document residual risk, control test results, accountable approval, expiration, and patch date",
+      "Recommend rejection because any internet-facing exploitable finding requires immediate patching",
+      "Approve the delay after attaching the WAF test and scheduled patch ticket",
+      "Track the issue as mitigated and reopen it shortly before the patch date"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The compensating control changes but does not eliminate risk. A time-bound exception should show evidence, residual exposure, ownership, approval, and a committed remediation date.",
+    "why_correct": "This gives decision-makers an accurate, auditable basis for risk acceptance.",
+    "why_wrong": {
+      "1": "Immediate remediation may be preferable, but the tested control and business request warrant a documented residual-risk decision rather than an automatic rule.",
+      "2": "This retains useful evidence, but it omits accountable risk approval, explicit residual risk, and exception expiration.",
+      "3": "The WAF reduces exposure but does not remediate the vulnerable code; marking it mitigated can obscure continuing residual risk."
+    },
+    "second_best": "Recommend rejection because any internet-facing exploitable finding requires immediate patching — Immediate remediation may be preferable, but the tested control and business request warrant a documented residual-risk decision rather than an automatic rule.",
+    "key_clue": "There is a meaningful control, but the exposed vulnerability remains exploitable.",
+    "trap": "Describing a compensating control as complete remediation.",
+    "takeaway": "Communicate residual risk and make exceptions owned, evidenced, and time-bound.",
+    "concept_tags": [
+      "risk exception",
+      "WAF",
+      "residual risk",
+      "stakeholder approval"
+    ],
+    "mistake_type": "risk elimination claim",
+    "objective_id": "4.1",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tested mitigation changes residual risk but does not replace formal exception governance."
+  },
+  {
+    "id": 30224,
+    "domain": "Reporting and Communication",
+    "objective": "Explain the importance of incident response reporting and communication",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Breach status update",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "BEST",
+    "qtype": "SINGLE",
+    "question": "DLP alerts show a 2 GB upload from a compromised laptop, proxy logs confirm the destination, but packet capture was unavailable and the archive contents are unknown. Legal asks whether regulated records were stolen. What is the BEST response?",
+    "options": [
+      "Confirm that an external transfer occurred, state that content impact remains under investigation, and provide the next evidence and update milestones",
+      "Treat regulated-data loss as probable and begin notification while content review continues",
+      "Report a suspected transfer because packet capture is unavailable to confirm session payloads",
+      "Wait for archive-content recovery before giving legal any status update"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The available evidence proves a transfer but not its contents. The response clearly separates confirmed facts from unresolved impact and establishes an investigation and communication cadence.",
+    "why_correct": "It is accurate, decision-useful, and avoids both understatement and unsupported certainty.",
+    "why_wrong": {
+      "1": "A preliminary legal response may be prudent, but the analyst should not present unknown archive contents as a confirmed factual conclusion.",
+      "2": "The independent DLP and proxy evidence already confirms an external transfer; packet capture affects content certainty, not whether transmission occurred.",
+      "3": "Content recovery would resolve impact, but delaying a factual update prevents timely risk and notification decisions."
+    },
+    "second_best": "Treat regulated-data loss as probable and begin notification while content review continues — A preliminary legal response may be prudent, but the analyst should not present unknown archive contents as a confirmed factual conclusion.",
+    "key_clue": "Transfer is confirmed while data classification is not.",
+    "trap": "Equating confirmed transmission volume with confirmed regulated-data loss.",
+    "takeaway": "Report what is known, what is unknown, and when the uncertainty will be reduced.",
+    "concept_tags": [
+      "DLP",
+      "proxy",
+      "legal communication",
+      "data exfiltration"
+    ],
+    "mistake_type": "certainty overstatement",
+    "objective_id": "4.2",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Confirmed transfer and unknown content require calibrated legal communication."
+  },
+  {
+    "id": 30225,
+    "domain": "Reporting and Communication",
+    "objective": "Explain the importance of vulnerability management reporting and communication",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Vulnerability KPI design",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "MOST appropriate",
+    "qtype": "SINGLE",
+    "question": "A security manager wants one metric for the board after teams closed many low-risk findings while internet-facing KEV items missed SLA. Which metric is MOST appropriate?",
+    "options": [
+      "Percentage of risk-weighted overdue findings, segmented by exposure and KEV status",
+      "Mean time to remediate, segmented by scanner severity",
+      "Percentage of all findings closed within the standard SLA",
+      "Quarter-over-quarter reduction in total open findings"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "A risk-weighted overdue measure reveals whether teams reduce the threats most likely to create business harm and prevents high-volume low-risk closure from masking dangerous SLA misses.",
+    "why_correct": "The metric aligns remediation performance with exploitation context and exposure.",
+    "why_wrong": {
+      "1": "This is a legitimate performance metric, but severity-only averages can hide the overdue exposed KEV items described.",
+      "2": "SLA compliance is useful, but unweighted aggregation rewards closing numerous low-risk findings while critical exposure remains.",
+      "3": "Trend data is useful, but total inventory can improve even as the most exploitable exposed risks worsen."
+    },
+    "second_best": "Mean time to remediate, segmented by scanner severity — This is a legitimate performance metric, but severity-only averages can hide the overdue exposed KEV items described.",
+    "key_clue": "Low-risk closure volume is masking overdue internet-facing KEV findings.",
+    "trap": "Using activity volume as a proxy for risk reduction.",
+    "takeaway": "Board metrics should reveal risk reduction, not merely operational throughput.",
+    "concept_tags": [
+      "KPI",
+      "KEV",
+      "SLA",
+      "risk-weighted reporting"
+    ],
+    "mistake_type": "vanity metric",
+    "objective_id": "4.1",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Risk-weighted outcomes must be distinguished from plausible aggregate performance metrics."
+  }
+]
