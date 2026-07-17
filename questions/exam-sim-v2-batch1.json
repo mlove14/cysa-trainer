@@ -43,7 +43,13 @@
       "1": "credible_runner_up",
       "2": "plausible_misconception",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "One-step endpoint triage with a credible evidence-preservation alternative."
   },
   {
     "id": 30202,
@@ -89,7 +95,13 @@
       "0": "credible_runner_up",
       "2": "plausible_misconception",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Baseline deviation distinguishes compromise from plausible administrative activity."
   },
   {
     "id": 30203,
@@ -135,7 +147,13 @@
       "1": "credible_runner_up",
       "2": "plausible_misconception",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Technique mapping requires separating transfer behavior from execution behavior."
   },
   {
     "id": 30204,
@@ -181,7 +199,13 @@
     "distractor_quality": {
       "1": "credible_runner_up",
       "3": "credible_runner_up"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Complementary telemetry must satisfy both identity and network-evidence needs."
   },
   {
     "id": 30205,
@@ -227,7 +251,13 @@
       "1": "credible_runner_up",
       "2": "credible_runner_up",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Correlated persistence evidence makes incident-phase sequencing decisive."
   },
   {
     "id": 30206,
@@ -273,7 +303,13 @@
       "0": "credible_runner_up",
       "2": "credible_runner_up",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Token continuity, device state, and authentication absence require correlation."
   },
   {
     "id": 30207,
@@ -319,7 +355,13 @@
       "1": "credible_runner_up",
       "2": "credible_runner_up",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Continued post-disable access distinguishes session containment from credential response."
   },
   {
     "id": 30208,
@@ -366,7 +408,13 @@
       "1": "credible_runner_up",
       "2": "credible_runner_up",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 5,
+    "reasoning_depth": "evaluation",
+    "distractor_strength": "expert",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Cloud-session containment competes with endpoint evidence and a live business dependency."
   },
   {
     "id": 30209,
@@ -412,7 +460,13 @@
       "1": "credible_runner_up",
       "2": "plausible_misconception",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Assessment confidence must be balanced against viable alternate inventory methods."
   },
   {
     "id": 30210,
@@ -458,7 +512,13 @@
       "1": "credible_runner_up",
       "2": "plausible_misconception",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Independent technical evidence must be weighed against additional confirmation options."
   },
   {
     "id": 30211,
@@ -504,7 +564,13 @@
       "1": "credible_runner_up",
       "2": "credible_runner_up",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Threat context and control coverage outweigh severity-only and impact-only choices."
   },
   {
     "id": 30212,
@@ -549,7 +615,13 @@
     "distractor_quality": {
       "1": "credible_runner_up",
       "3": "credible_runner_up"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "A constrained change window forces likelihood-and-impact prioritization."
   },
   {
     "id": 30213,
@@ -595,7 +667,13 @@
       "1": "credible_runner_up",
       "2": "credible_runner_up",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Availability needs distinguish narrow prevention from shutdown and detection-only controls."
   },
   {
     "id": 30214,
@@ -641,7 +719,13 @@
       "1": "credible_runner_up",
       "2": "credible_runner_up",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Runtime, registry, and pipeline evidence must be sequenced before closure."
   },
   {
     "id": 30215,
@@ -687,7 +771,13 @@
       "1": "credible_runner_up",
       "2": "credible_runner_up",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 5,
+    "reasoning_depth": "evaluation",
+    "distractor_strength": "expert",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "A tested control bypass resolves the availability-versus-exploitation tradeoff."
   },
   {
     "id": 30216,
@@ -733,7 +823,13 @@
       "1": "credible_runner_up",
       "2": "plausible_misconception",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Active communication makes containment timing compete with volatile collection."
   },
   {
     "id": 30217,
@@ -778,7 +874,13 @@
     "distractor_quality": {
       "0": "credible_runner_up",
       "3": "credible_runner_up"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "The requested persistence scope distinguishes configuration removal from account containment."
   },
   {
     "id": 30218,
@@ -824,7 +926,13 @@
       "1": "credible_runner_up",
       "2": "credible_runner_up",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Timeline correlation supports a bounded conclusion without asserting unobserved impact."
   },
   {
     "id": 30219,
@@ -870,7 +978,13 @@
       "1": "credible_runner_up",
       "2": "credible_runner_up",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Recovery objectives compete with additional assurance and broad restoration speed."
   },
   {
     "id": 30220,
@@ -916,7 +1030,13 @@
       "1": "credible_runner_up",
       "2": "credible_runner_up",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 5,
+    "reasoning_depth": "evaluation",
+    "distractor_strength": "expert",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Patient safety, volatile evidence, and lateral-movement risk require scoped containment."
   },
   {
     "id": 30221,
@@ -962,7 +1082,13 @@
       "1": "credible_runner_up",
       "2": "plausible_misconception",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Validated exposure must remain visible without allowing inventory noise to inflate risk."
   },
   {
     "id": 30222,
@@ -1007,7 +1133,13 @@
     "distractor_quality": {
       "1": "credible_runner_up",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Operational continuity requires prioritizing status and ownership over raw chronology."
   },
   {
     "id": 30223,
@@ -1053,7 +1185,13 @@
       "1": "credible_runner_up",
       "2": "credible_runner_up",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tested mitigation changes residual risk but does not replace formal exception governance."
   },
   {
     "id": 30224,
@@ -1099,7 +1237,13 @@
       "1": "credible_runner_up",
       "2": "credible_runner_up",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Confirmed transfer and unknown content require calibrated legal communication."
   },
   {
     "id": 30225,
@@ -1145,6 +1289,12 @@
       "1": "credible_runner_up",
       "2": "credible_runner_up",
       "3": "plausible_misconception"
-    }
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Risk-weighted outcomes must be distinguished from plausible aggregate performance metrics."
   }
 ]

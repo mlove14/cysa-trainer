@@ -65,7 +65,7 @@ test('question bank v2 batch 1 satisfies its schema and content contract',()=>{
     '4.2':'Explain the importance of incident response reporting and communication'
   };
   const giveawayPattern=/delete all|disable (?:all )?logging|rm -rf|display name|terminal colou?r|social media rumor|annual audit|scanner plugin|comment length/i;
-  const required=['id','domain','objective_id','objective','tier','difficulty','topic','kind','select_limit','options','answer','explanation','why_correct','why_wrong','second_best','key_clue','trap','takeaway','concept_tags','mistake_type','distractor_quality'];
+  const required=['id','domain','objective_id','objective','tier','difficulty','topic','kind','select_limit','options','answer','explanation','why_correct','why_wrong','second_best','key_clue','trap','takeaway','concept_tags','mistake_type','distractor_quality','quality_score','reasoning_depth','distractor_strength','decisive_clue_present','plausible_alternative_count','psychometric_notes'];
   batch.forEach(q=>{
     required.forEach(field=>assert.ok(Object.hasOwn(q,field),`${q.id} missing ${field}`));
     assert.equal(q.options.length,4,`${q.id} must have four options`);
@@ -84,6 +84,15 @@ test('question bank v2 batch 1 satisfies its schema and content contract',()=>{
     assert.equal(q.objective,objectiveLabels[q.objective_id],`${q.id} has an unsupported objective mapping`);
     const credible=Object.values(q.distractor_quality).filter(value=>value==='credible_runner_up').length;
     assert.ok(credible>=(q.tier===2?1:2),`${q.id} lacks credible alternatives for its tier`);
+    assert.equal(q.plausible_alternative_count,credible,`${q.id} plausible-alternative count is inconsistent`);
+    assert.ok(q.plausible_alternative_count>=(q.tier===2?1:2),`${q.id} plausible-alternative count is too low`);
+    assert.ok(Number.isInteger(q.quality_score)&&q.quality_score>=4&&q.quality_score<=5,`${q.id} has an invalid quality score`);
+    assert.ok(['recognition','application','analysis','evaluation'].includes(q.reasoning_depth),`${q.id} has invalid reasoning depth`);
+    if(q.tier>=3)assert.notEqual(q.reasoning_depth,'recognition',`${q.id} cannot be recognition at Tier ${q.tier}`);
+    assert.ok(['weak','acceptable','strong','expert'].includes(q.distractor_strength),`${q.id} has invalid distractor strength`);
+    if(q.tier>=3)assert.ok(['strong','expert'].includes(q.distractor_strength),`${q.id} distractors are too weak for Tier ${q.tier}`);
+    assert.equal(q.decisive_clue_present,true,`${q.id} must contain a decisive clue`);
+    assert.ok(typeof q.psychometric_notes==='string'&&q.psychometric_notes.trim(),`${q.id} needs psychometric notes`);
     assert.ok(Array.isArray(q.concept_tags)&&q.concept_tags.length>0,`${q.id} needs concept tags`);
   });
 
