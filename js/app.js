@@ -1,5 +1,5 @@
 let manifest=null,questions=[],sourceQuestions=[],current=0,sessionScore=0,answers={},mode='practice',flagged=new Set(),favorites=new Set(),appView='academy',activePackFile='',examBank=[];
-const EXAM_PACK='questions/exam-sim-release1.json';
+const EXAM_PACK='questions/exam-sim-v2-batch1.json';
 const STORE='cysaCoachR3Stats', LISTS='cysaCoachR3Lists';
 const CASE_DETAILS={
 'Case 001':{number:'Case File 001',title:'Payroll Phishing Campaign',difficulty:'Hard',scenario:'A payroll specialist opened a password-protected attachment from an external sender. Endpoint telemetry shows suspicious Microsoft Word and PowerShell behavior, but containment decisions must be based on validated impact.',context:'Correlate endpoint, email, DNS, and proxy evidence to determine execution, scope, containment, and leadership communication.'},
