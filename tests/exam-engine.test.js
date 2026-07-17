@@ -1,6 +1,8 @@
 const assert=require('node:assert/strict');
 const test=require('node:test');
 const engine=require('../js/exam-engine.js');
+const fs=require('node:fs');
+const path=require('node:path');
 
 function question(id,answer=[id%4],kind='single'){
   return {id,kind,options:[`${id}-A`,`${id}-B`,`${id}-C`,`${id}-D`],answer,why_wrong:{0:'zero',1:'one',2:'two',3:'three'}};
@@ -33,4 +35,38 @@ test('85-question exams place two to four available PBQs first',()=>{
  const leading=exam.findIndex(q=>!engine.isPbq(q));
  assert.ok(leading>=2&&leading<=4,leading);
  assert.equal(exam.length,85);
+});
+
+test('question bank v2 batch 1 satisfies its schema and content contract',()=>{
+  const bank=JSON.parse(fs.readFileSync(path.join(__dirname,'../questions/exam-sim-release1.json'),'utf8'));
+  const ids=bank.map(q=>q.id);
+  assert.equal(new Set(ids).size,ids.length,'question IDs must be unique across the bank');
+
+  const batch=bank.filter(q=>q.id>=30201&&q.id<=30225);
+  assert.equal(batch.length,25,'batch must contain exactly 25 questions');
+  const required=['id','domain','objective','tier','difficulty','topic','kind','select_limit','options','answer','explanation','why_correct','why_wrong','second_best','key_clue','trap','takeaway','concept_tags','mistake_type'];
+  batch.forEach(q=>{
+    required.forEach(field=>assert.ok(Object.hasOwn(q,field),`${q.id} missing ${field}`));
+    assert.equal(q.options.length,4,`${q.id} must have four options`);
+    assert.ok(['single','multi'].includes(q.kind),`${q.id} has invalid kind`);
+    assert.equal(q.select_limit,q.answer.length,`${q.id} select_limit mismatch`);
+    assert.ok(q.kind==='single'?q.answer.length===1:q.answer.length>1,`${q.id} kind/answer mismatch`);
+    assert.equal(new Set(q.answer).size,q.answer.length,`${q.id} repeats an answer index`);
+    q.answer.forEach(index=>assert.ok(Number.isInteger(index)&&index>=0&&index<q.options.length,`${q.id} has invalid answer index`));
+    q.options.forEach((_,index)=>{
+      if(!q.answer.includes(index))assert.ok(q.why_wrong[index],`${q.id} missing why_wrong for option ${index}`);
+    });
+    assert.ok(Array.isArray(q.concept_tags)&&q.concept_tags.length>0,`${q.id} needs concept tags`);
+  });
+
+  const countBy=field=>Object.fromEntries([...new Set(batch.map(q=>q[field]))].sort().map(value=>[value,batch.filter(q=>q[field]===value).length]));
+  assert.deepEqual(countBy('domain'),{
+    'Incident Response and Management':5,
+    'Reporting and Communication':5,
+    'Security Operations':8,
+    'Vulnerability Management':7
+  });
+  assert.deepEqual(countBy('tier'),{'2':8,'3':14,'4':3});
+  assert.deepEqual(countBy('difficulty'),{'Exam':14,'Exam Killer':3,'Practice':8});
+  assert.deepEqual(countBy('kind'),{multi:4,single:21});
 });
