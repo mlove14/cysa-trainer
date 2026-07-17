@@ -21,16 +21,16 @@
       0
     ],
     "explanation": "The regular cadence and originating unsigned service require correlation, not a conclusion.",
-    "why_correct": "Inspect DNS response history and correlate the service process with subsequent network connections directly addresses the scenario because the regular cadence and originating unsigned service require correlation, not a conclusion.",
+    "why_correct": "DNS response history shows whether the beacon received usable infrastructure, while process-to-connection correlation tests whether the unsigned service acted on those replies.",
     "why_wrong": {
-      "1": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "2": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "3": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "1": "Newly registered domains are a useful risk signal, but blocking the entire category before checking responses and follow-on traffic is overbroad and discards the chance to validate this host.",
+      "2": "Reimaging could contain a confirmed endpoint compromise, but doing it now destroys the volatile process and connection evidence needed to decide whether the periodic queries are malicious.",
+      "3": "No completed proxy session may suggest the callback failed, yet DNS can support other channels and the unsigned service still requires investigation."
     },
-    "second_best": "Block every newly registered domain immediately \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "Treat the failed proxy sessions as proof that no compromise occurred \u2014 No completed proxy session may suggest the callback failed, yet DNS can support other channels and the unsigned service still requires investigation.",
     "key_clue": "The regular cadence and originating unsigned service require correlation, not a conclusion.",
     "trap": "Equating one suspicious indicator with confirmed compromise.",
-    "takeaway": "The regular cadence and originating unsigned service require correlation, not a conclusion.",
+    "takeaway": "Correlate periodic DNS activity with its originating process and downstream traffic before declaring or dismissing command and control.",
     "concept_tags": [
       "DNS beacon triage",
       "Analyze",
@@ -40,16 +40,16 @@
     "misconception": "Equating one suspicious indicator with confirmed compromise",
     "objective_id": "1.2",
     "distractor_quality": {
-      "1": "credible_runner_up",
+      "1": "plausible_misconception",
       "2": "plausible_misconception",
-      "3": "plausible_misconception"
+      "3": "credible_runner_up"
     },
     "quality_score": 4,
     "reasoning_depth": "application",
     "distractor_strength": "acceptable",
     "decisive_clue_present": true,
     "plausible_alternative_count": 1,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "The item separates a tempting negative proxy result from the stronger requirement to correlate DNS replies, process identity, and follow-on connections."
   },
   {
     "id": 30302,
@@ -73,16 +73,16 @@
       1
     ],
     "explanation": "The shared refresh token can explain geographically inconsistent sessions.",
-    "why_correct": "Revoke the token and examine token issuance and device records directly addresses the scenario because the shared refresh token can explain geographically inconsistent sessions.",
+    "why_correct": "The same refresh-token identifier across distant locations points to token replay; revocation contains that credential while issuance and device records establish how it was obtained and used.",
     "why_wrong": {
-      "0": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "2": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "3": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "0": "A broad password reset feels protective after suspicious authentication, but it disrupts unaffected users and does not necessarily invalidate the replayed refresh token.",
+      "2": "The corporate IP is familiar and therefore reassuring, but possession of the same token can let an attacker operate through either location.",
+      "3": "ASN or country blocking can slow the observed source, but the stolen token remains valid and can be replayed through different infrastructure."
     },
-    "second_best": "Reset every employee password \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "Block the foreign country at the perimeter firewall only \u2014 ASN or country blocking can slow the observed source, but the stolen token remains valid and can be replayed through different infrastructure.",
     "key_clue": "The shared refresh token can explain geographically inconsistent sessions.",
     "trap": "Assuming a familiar IP makes a session trustworthy.",
-    "takeaway": "The shared refresh token can explain geographically inconsistent sessions.",
+    "takeaway": "Contain suspected token replay by revoking the token, then reconstruct issuance and device use rather than relying on location alone.",
     "concept_tags": [
       "Cloud sign-in analysis",
       "Analyze",
@@ -92,16 +92,16 @@
     "misconception": "Assuming a familiar IP makes a session trustworthy",
     "objective_id": "1.2",
     "distractor_quality": {
-      "0": "credible_runner_up",
+      "0": "plausible_misconception",
       "2": "plausible_misconception",
-      "3": "plausible_misconception"
+      "3": "credible_runner_up"
     },
     "quality_score": 4,
     "reasoning_depth": "application",
     "distractor_strength": "acceptable",
     "decisive_clue_present": true,
     "plausible_alternative_count": 1,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "The shared token identifier is the discriminating evidence; geographic controls and enterprise password resets are plausible containment moves but miss the credential actually observed."
   },
   {
     "id": 30303,
@@ -125,16 +125,16 @@
       2
     ],
     "explanation": "SPF success alone does not establish alignment with the visible sender.",
-    "why_correct": "Verify whether the supplier authorizes that service and compare DKIM alignment directly addresses the scenario because sPF success alone does not establish alignment with the visible sender.",
+    "why_correct": "Supplier authorization and DKIM alignment determine whether the bulk sender is legitimate despite SPF passing for a return-path domain that does not align with the visible From domain.",
     "why_wrong": {
-      "0": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "1": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "3": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "0": "Permanent quarantine protects recipients in the short term, but it is disproportionate until the supplier confirms whether the bulk platform is an approved sender.",
+      "1": "SPF validates the return-path service and is initially reassuring, but DMARC also requires alignment to the visible supplier domain.",
+      "3": "Endpoint hunting is reasonable if delivery or execution is established, but header authentication can first resolve whether these messages are authorized without assuming compromise."
     },
-    "second_best": "Quarantine all mail from the supplier permanently \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "Quarantine all mail from the supplier permanently \u2014 Permanent quarantine protects recipients in the short term, but it is disproportionate until the supplier confirms whether the bulk platform is an approved sender.",
     "key_clue": "SPF success alone does not establish alignment with the visible sender.",
     "trap": "Treating SPF pass as complete sender authentication.",
-    "takeaway": "SPF success alone does not establish alignment with the visible sender.",
+    "takeaway": "When SPF passes but DMARC alignment fails, validate the sending relationship and aligned DKIM identity before escalating or approving the mail.",
     "concept_tags": [
       "Email header analysis",
       "Analyze",
@@ -153,7 +153,7 @@
     "distractor_strength": "acceptable",
     "decisive_clue_present": true,
     "plausible_alternative_count": 1,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "The question tests the boundary between SPF authentication and DMARC alignment while keeping quarantine and endpoint hunting credible at later stages."
   },
   {
     "id": 30304,
@@ -177,16 +177,16 @@
       3
     ],
     "explanation": "The maintenance window and signed parent are relevant but not dispositive.",
-    "why_correct": "Compare the command, operator, and task details with the approved change record directly addresses the scenario because the maintenance window and signed parent are relevant but not dispositive.",
+    "why_correct": "The approved change record supplies the expected operator, encoded command, and scheduled-task details needed to distinguish maintenance from signed-tool abuse.",
     "why_wrong": {
-      "0": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "1": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "2": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "0": "A signed administration parent and maintenance timing support legitimacy, but attackers also abuse trusted tools, so a blanket whitelist would suppress materially different commands.",
+      "1": "Removing the task may become containment if it is unauthorized, but deletion before recording its action, trigger, and creator sacrifices evidence and may interrupt approved work.",
+      "2": "Encoding is a common obfuscation signal and deserves review, yet administrators also encode commands; it cannot resolve authorization without the change record."
     },
-    "second_best": "Whitelist all activity launched by the signed tool \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "Escalate solely because the command is encoded \u2014 Encoding is a common obfuscation signal and deserves review, yet administrators also encode commands; it cannot resolve authorization without the change record.",
     "key_clue": "The maintenance window and signed parent are relevant but not dispositive.",
     "trap": "Trusting signed tooling regardless of how it is used.",
-    "takeaway": "The maintenance window and signed parent are relevant but not dispositive.",
+    "takeaway": "Validate suspicious administrative activity against the exact approved operator and change details; neither code signing nor encoding decides intent alone.",
     "concept_tags": [
       "PowerShell telemetry",
       "Analyze",
@@ -196,16 +196,16 @@
     "misconception": "Trusting signed tooling regardless of how it is used",
     "objective_id": "1.2",
     "distractor_quality": {
-      "0": "credible_runner_up",
+      "0": "plausible_misconception",
       "1": "plausible_misconception",
-      "2": "plausible_misconception"
+      "2": "credible_runner_up"
     },
     "quality_score": 4,
     "reasoning_depth": "application",
     "distractor_strength": "acceptable",
     "decisive_clue_present": true,
     "plausible_alternative_count": 1,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "Maintenance timing and a trusted parent make escalation less obvious, while the unique host and persistence action keep change-record validation necessary."
   },
   {
     "id": 30305,
@@ -229,16 +229,16 @@
       0
     ],
     "explanation": "An approved destination does not resolve whether the files and project are authorized.",
-    "why_correct": "Validate repository scope, file sensitivity, and the developer\u2019s assigned project directly addresses the scenario because an approved destination does not resolve whether the files and project are authorized.",
+    "why_correct": "Repository ownership, file classification, and project assignment together determine whether this after-hours transfer is approved work or unauthorized movement of confidential code.",
     "why_wrong": {
-      "1": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "2": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "3": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "1": "Disabling the repository would quickly stop further uploads, but it affects all engineering users before confirming that this developer or corporate destination is out of scope.",
+      "2": "A company-owned repository reduces external-exfiltration risk and is a strong benign explanation, but it does not prove this developer was authorized for these confidential files.",
+      "3": "Law-enforcement notification may be warranted after confirmed theft, but current evidence shows a policy-sensitive transfer whose authorization and exposure are still unknown."
     },
-    "second_best": "Disable the repository for the entire engineering group \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "Close the alert because the destination is company-owned \u2014 A company-owned repository reduces external-exfiltration risk and is a strong benign explanation, but it does not prove this developer was authorized for these confidential files.",
     "key_clue": "An approved destination does not resolve whether the files and project are authorized.",
     "trap": "Assuming an approved service makes every transfer legitimate.",
-    "takeaway": "An approved destination does not resolve whether the files and project are authorized.",
+    "takeaway": "Treat an approved destination as context, not authorization; verify data sensitivity, repository boundaries, and the user\u2019s business need.",
     "concept_tags": [
       "Data exfiltration triage",
       "Analyze",
@@ -248,8 +248,8 @@
     "misconception": "Assuming an approved service makes every transfer legitimate",
     "objective_id": "1.2",
     "distractor_quality": {
-      "1": "credible_runner_up",
-      "2": "plausible_misconception",
+      "1": "plausible_misconception",
+      "2": "credible_runner_up",
       "3": "plausible_misconception"
     },
     "quality_score": 4,
@@ -257,7 +257,7 @@
     "distractor_strength": "acceptable",
     "decisive_clue_present": true,
     "plausible_alternative_count": 1,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "The corporate repository is deliberately reassuring, forcing the learner to distinguish destination trust from authorization for a specific data set and project."
   },
   {
     "id": 30306,
@@ -274,23 +274,23 @@
     "options": [
       "The image approval date",
       "Runtime process ancestry and the identity that initiated the exec session",
-      "The number of layers in the container image",
-      "The host operating system wallpaper policy"
+      "The image build provenance and most recent vulnerability attestation",
+      "Host audit logs showing when the container runtime service started"
     ],
     "answer": [
       1
     ],
     "explanation": "The anomalous interactive process must be tied to its initiator and ancestry.",
-    "why_correct": "Runtime process ancestry and the identity that initiated the exec session directly addresses the scenario because the anomalous interactive process must be tied to its initiator and ancestry.",
+    "why_correct": "Process ancestry reveals how the unexpected shell reached the token, and the exec-session identity ties that runtime deviation to a user or automation principal.",
     "why_wrong": {
-      "0": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "2": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "3": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "0": "A recent image approval makes a malicious build less likely, but it says nothing about who opened a shell in a normally noninteractive workload.",
+      "2": "Build provenance and attestation can establish image integrity, yet an approved image may still be abused at runtime through an exec session.",
+      "3": "Host runtime-service start logs can expose platform instability or a restart, but they do not identify the shell\u2019s parent chain or the principal that read the mounted token."
     },
-    "second_best": "The image approval date \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "The image build provenance and most recent vulnerability attestation \u2014 Build provenance and attestation can establish image integrity, yet an approved image may still be abused at runtime through an exec session.",
     "key_clue": "The anomalous interactive process must be tied to its initiator and ancestry.",
     "trap": "Using image trust as a substitute for runtime analysis.",
-    "takeaway": "The anomalous interactive process must be tied to its initiator and ancestry.",
+    "takeaway": "For anomalous container behavior, prioritize runtime ancestry and initiating identity over static image trust or host-service health.",
     "concept_tags": [
       "Container runtime detection",
       "Analyze",
@@ -300,8 +300,8 @@
     "misconception": "Using image trust as a substitute for runtime analysis",
     "objective_id": "1.2",
     "distractor_quality": {
-      "0": "credible_runner_up",
-      "2": "plausible_misconception",
+      "0": "plausible_misconception",
+      "2": "credible_runner_up",
       "3": "plausible_misconception"
     },
     "quality_score": 4,
@@ -309,7 +309,7 @@
     "distractor_strength": "acceptable",
     "decisive_clue_present": true,
     "plausible_alternative_count": 1,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "The scenario contrasts supply-chain evidence with runtime evidence; both are defensible, but only runtime attribution answers who initiated the token access."
   },
   {
     "id": 30307,
@@ -333,16 +333,16 @@
       2
     ],
     "explanation": "Framework mapping organizes related behavior but does not prove attribution.",
-    "why_correct": "To connect tactics and techniques into a testable intrusion hypothesis directly addresses the scenario because framework mapping organizes related behavior but does not prove attribution.",
+    "why_correct": "Mapping credential dumping and remote service creation links discovery and lateral-movement techniques into a hypothesis that analysts can test against additional hosts and telemetry.",
     "why_wrong": {
-      "0": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "1": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "3": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "0": "Framework prevalence can inform expectations, but it cannot calculate an exact probability of attacker success from two observations.",
+      "1": "A framework helps organize collection priorities, but mapped technique labels are not substitutes for process, authentication, and service-creation evidence.",
+      "3": "Technique combinations may resemble known groups and aid threat-intelligence comparison, but they do not meet the evidence threshold for legal attribution."
     },
-    "second_best": "To calculate an exact probability that the attacker will succeed \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "To assign legal attribution to a threat actor \u2014 Technique combinations may resemble known groups and aid threat-intelligence comparison, but they do not meet the evidence threshold for legal attribution.",
     "key_clue": "Framework mapping organizes related behavior but does not prove attribution.",
     "trap": "Treating a framework mapping as conclusive attribution.",
-    "takeaway": "Framework mapping organizes related behavior but does not prove attribution.",
+    "takeaway": "Use attack frameworks to organize related behaviors and guide testing, not to replace evidence or claim probabilistic certainty and attribution.",
     "concept_tags": [
       "Attack framework mapping",
       "Explain",
@@ -352,16 +352,16 @@
     "misconception": "Treating a framework mapping as conclusive attribution",
     "objective_id": "3.1",
     "distractor_quality": {
-      "0": "credible_runner_up",
+      "0": "plausible_misconception",
       "1": "credible_runner_up",
-      "3": "plausible_misconception"
+      "3": "credible_runner_up"
     },
     "quality_score": 4,
     "reasoning_depth": "analysis",
     "distractor_strength": "strong",
     "decisive_clue_present": true,
     "plausible_alternative_count": 2,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "Attribution is the strongest temptation because technique patterns can resemble known actors; the item requires recognizing the narrower analytical purpose of mapping."
   },
   {
     "id": 30308,
@@ -385,16 +385,16 @@
       3
     ],
     "explanation": "A silent credential or privilege failure can create false improvement.",
-    "why_correct": "Scanner authentication success and privilege level on the targets directly addresses the scenario because a silent credential or privilege failure can create false improvement.",
+    "why_correct": "An authentication or privilege failure makes a credentialed scan behave like a shallow assessment, directly explaining the sudden count drop despite unchanged reachability.",
     "why_wrong": {
-      "0": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "1": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "2": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "0": "A lower count resembles successful remediation, but findings cannot be closed until scan access is verified and fixes are independently supported.",
+      "1": "A scoring change could alter displayed severity and is worth checking after a tool update, but it would not usually make authenticated detections disappear wholesale overnight.",
+      "2": "Unauthenticated scanning preserves an external view and may be a temporary comparison, but permanently replacing credentialed checks would reduce visibility into packages and configuration."
     },
-    "second_best": "Whether all missing findings should be accepted as remediated \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "Whether the CVSS formula changed overnight \u2014 A scoring change could alter displayed severity and is worth checking after a tool update, but it would not usually make authenticated detections disappear wholesale overnight.",
     "key_clue": "A silent credential or privilege failure can create false improvement.",
     "trap": "Interpreting lower scanner counts as verified remediation.",
-    "takeaway": "A silent credential or privilege failure can create false improvement.",
+    "takeaway": "When credentialed results improve abruptly without a network change, verify authentication and effective privileges before crediting remediation.",
     "concept_tags": [
       "Authenticated scanning",
       "Implement",
@@ -413,7 +413,7 @@
     "distractor_strength": "strong",
     "decisive_clue_present": true,
     "plausible_alternative_count": 2,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "The test pits a plausible tool-scoring explanation against the more direct control failure indicated by a broad loss of host-level findings."
   },
   {
     "id": 30309,
@@ -437,16 +437,16 @@
       0
     ],
     "explanation": "Coverage should be tailored to operational constraints and vendor guidance.",
-    "why_correct": "Use a vendor-supported, rate-limited scan profile during an approved window directly addresses the scenario because coverage should be tailored to operational constraints and vendor guidance.",
+    "why_correct": "A vendor-supported low-impact profile, controlled rate, and approved window preserve assessment coverage while respecting the appliance\u2019s documented stability constraint.",
     "why_wrong": {
-      "1": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "2": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "3": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "1": "Aggressive scanning shortens the window and might improve coverage, but probe volume is precisely the condition that could interrupt this fragile production device.",
+      "2": "Permanent exclusion prevents an outage, yet leaves an unmanaged blind spot; any temporary exclusion would require documented risk and alternative assessment.",
+      "3": "Model-based inference can narrow likely exposures when active testing is unsafe, but it cannot confirm the appliance\u2019s actual patch and configuration state."
     },
-    "second_best": "Run the most aggressive profile to finish quickly \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "Rely only on its product name to infer every installed patch \u2014 Model-based inference can narrow likely exposures when active testing is unsafe, but it cannot confirm the appliance\u2019s actual patch and configuration state.",
     "key_clue": "Coverage should be tailored to operational constraints and vendor guidance.",
     "trap": "Believing scan intensity and assessment quality are identical.",
-    "takeaway": "Coverage should be tailored to operational constraints and vendor guidance.",
+    "takeaway": "Tailor scan intensity and timing to fragile assets, supplementing rather than abandoning evidence-based coverage.",
     "concept_tags": [
       "Scan safety",
       "Implement",
@@ -456,16 +456,16 @@
     "misconception": "Believing scan intensity and assessment quality are identical",
     "objective_id": "2.1",
     "distractor_quality": {
-      "1": "credible_runner_up",
+      "1": "plausible_misconception",
       "2": "credible_runner_up",
-      "3": "plausible_misconception"
+      "3": "credible_runner_up"
     },
     "quality_score": 4,
     "reasoning_depth": "analysis",
     "distractor_strength": "strong",
     "decisive_clue_present": true,
     "plausible_alternative_count": 2,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "Passive product inference is a credible operational compromise, but its uncertainty makes vendor-approved controlled scanning the better balance of safety and assurance."
   },
   {
     "id": 30310,
@@ -489,16 +489,16 @@
       1
     ],
     "explanation": "Host inventory tests the component version directly.",
-    "why_correct": "Authenticated package or software inventory from the affected host directly addresses the scenario because host inventory tests the component version directly.",
+    "why_correct": "Authenticated inventory reads the installed component state rather than an advertised banner, providing the strongest evidence for confirming or rejecting the obsolete-library finding.",
     "why_wrong": {
-      "0": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "2": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "3": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "0": "Severity color helps prioritize a confirmed finding, but it reflects scanner scoring and contributes no evidence about whether the customized banner matches the installed package.",
+      "2": "The screenshot supports the team\u2019s claim that the banner is customized, yet it still cannot prove which library version the host executes.",
+      "3": "The owner may know the deployment and is a useful source, but verbal assurance is weaker and less reproducible than authenticated inventory."
     },
-    "second_best": "The scanner severity color \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "A screenshot of the customized banner alone \u2014 The screenshot supports the team\u2019s claim that the banner is customized, yet it still cannot prove which library version the host executes.",
     "key_clue": "Host inventory tests the component version directly.",
     "trap": "Treating banner-based detection as definitive.",
-    "takeaway": "Host inventory tests the component version directly.",
+    "takeaway": "Resolve banner-based disputes with direct, authenticated evidence of installed software rather than confidence labels or assertions.",
     "concept_tags": [
       "False-positive validation",
       "Analyze",
@@ -517,7 +517,7 @@
     "distractor_strength": "strong",
     "decisive_clue_present": true,
     "plausible_alternative_count": 2,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "The customized-banner screenshot is intentionally persuasive; learners must identify that it disproves neither the scanner claim nor the installed vulnerable component."
   },
   {
     "id": 30311,
@@ -541,16 +541,16 @@
       2
     ],
     "explanation": "Controlled reproduction and code-side evidence distinguish a true finding from noise.",
-    "why_correct": "Reproduce with controlled payloads and review server-side query handling directly addresses the scenario because controlled reproduction and code-side evidence distinguish a true finding from noise.",
+    "why_correct": "Controlled payloads test exploit behavior safely, and server-side query review shows whether input reaches a database unsafely despite the identical sanitized responses.",
     "why_wrong": {
-      "0": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "1": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "3": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "0": "DAST identification and potential injection impact justify urgent triage, but the sanitized, invariant responses mean the critical finding is not yet confirmed.",
+      "1": "Repeated negative tests can indicate a false positive on this parameter, yet generalizing that result to every DAST search-field finding would discard valid detections.",
+      "3": "Taking the application offline would reduce exposure if exploitation were confirmed, but it imposes business impact before reproduction or code evidence establishes a vulnerability."
     },
-    "second_best": "Publish the finding as confirmed critical immediately \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "Publish the finding as confirmed critical immediately \u2014 DAST identification and potential injection impact justify urgent triage, but the sanitized, invariant responses mean the critical finding is not yet confirmed.",
     "key_clue": "Controlled reproduction and code-side evidence distinguish a true finding from noise.",
     "trap": "Confusing scanner confidence with exploit confirmation.",
-    "takeaway": "Controlled reproduction and code-side evidence distinguish a true finding from noise.",
+    "takeaway": "Validate ambiguous DAST injection results with controlled behavior and server-side data flow before publishing severity or disrupting service.",
     "concept_tags": [
       "Web scanner output",
       "Analyze",
@@ -569,7 +569,7 @@
     "distractor_strength": "strong",
     "decisive_clue_present": true,
     "plausible_alternative_count": 2,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "Urgent publication is credible because injection can be critical, while invariant errors and timing provide enough contradictory evidence to require validation first."
   },
   {
     "id": 30312,
@@ -586,23 +586,23 @@
     "options": [
       "CVSS score alone",
       "Whichever finding was discovered first",
-      "The shorter vulnerability title",
+      "The internal flaw because confirmed exploitation always outweighs external exposure",
       "Current exploit evidence, exposure, asset impact, and effectiveness of controls together"
     ],
     "answer": [
       3
     ],
     "explanation": "Active evidence and control effectiveness materially change contextual risk.",
-    "why_correct": "Current exploit evidence, exposure, asset impact, and effectiveness of controls together directly addresses the scenario because active evidence and control effectiveness materially change contextual risk.",
+    "why_correct": "Exploit evidence, reachability, asset consequence, and verified control effectiveness produce current risk; those factors allow a defensible comparison between the exposed KEV and active internal lateral movement.",
     "why_wrong": {
-      "0": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "1": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "2": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "0": "CVSS offers a common technical baseline and both findings are critical, but it omits the observed exploitation, network position, asset impact, and WAF effectiveness that differentiate them.",
+      "1": "Discovery order can matter for SLA aging, yet it does not measure which flaw is enabling current compromise or exposes the more consequential asset.",
+      "2": "Confirmed lateral exploitation is a powerful reason to prioritize the internal flaw, but treating it as automatically dominant ignores the external KEV\u2019s exposure, business impact, and whether its WAF rule truly mitigates exploitation."
     },
-    "second_best": "CVSS score alone \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "The internal flaw because confirmed exploitation always outweighs external exposure \u2014 Confirmed lateral exploitation is a powerful reason to prioritize the internal flaw, but treating it as automatically dominant ignores the external KEV\u2019s exposure, business impact, and whether its WAF rule truly mitigates exploitation.",
     "key_clue": "Active evidence and control effectiveness materially change contextual risk.",
     "trap": "Prioritizing severity without environmental context.",
-    "takeaway": "Active evidence and control effectiveness materially change contextual risk.",
+    "takeaway": "Emergency prioritization must combine live exploitation, exposure, asset impact, and tested compensating controls rather than elevate one signal to an absolute rule.",
     "concept_tags": [
       "Risk prioritization",
       "Analyze",
@@ -612,16 +612,16 @@
     "misconception": "Prioritizing severity without environmental context",
     "objective_id": "2.3",
     "distractor_quality": {
-      "0": "credible_runner_up",
+      "0": "plausible_misconception",
       "1": "credible_runner_up",
-      "2": "plausible_misconception"
+      "2": "credible_runner_up"
     },
     "quality_score": 4,
     "reasoning_depth": "analysis",
     "distractor_strength": "strong",
     "decisive_clue_present": true,
     "plausible_alternative_count": 2,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "The internal exploit is designed as a strong runner-up; the question assesses whether learners resist replacing severity-only ranking with a different single-factor rule."
   },
   {
     "id": 30313,
@@ -645,16 +645,16 @@
       0
     ],
     "explanation": "EPSS informs likelihood but does not replace exposure and business impact.",
-    "why_correct": "The portal issue after combining business impact, exposure, and exploit likelihood directly addresses the scenario because ePSS informs likelihood but does not replace exposure and business impact.",
+    "why_correct": "The customer portal combines authentication impact and internet exposure with exploit likelihood, creating greater contextual risk than the isolated lab host despite its lower EPSS.",
     "why_wrong": {
-      "1": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "2": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "3": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "1": "The lab flaw\u2019s higher EPSS makes exploitation statistically more likely and merits attention, but isolation and low business consequence reduce its present organizational risk.",
+      "2": "Matching CVSS scores make equal treatment look consistent, yet CVSS does not incorporate the portal\u2019s exposure, authentication function, or lab isolation.",
+      "3": "Waiting for public exploitation avoids acting on forecasts, but vulnerability management should reduce foreseeable exposed risk before an incident confirms it."
     },
-    "second_best": "The lab issue because EPSS must be used alone \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "The lab issue because EPSS must be used alone \u2014 The lab flaw\u2019s higher EPSS makes exploitation statistically more likely and merits attention, but isolation and low business consequence reduce its present organizational risk.",
     "key_clue": "EPSS informs likelihood but does not replace exposure and business impact.",
     "trap": "Using a single risk metric as the entire prioritization model.",
-    "takeaway": "EPSS informs likelihood but does not replace exposure and business impact.",
+    "takeaway": "Use EPSS as one likelihood input alongside exposure and business impact; a higher probability does not automatically outweigh an isolated asset context.",
     "concept_tags": [
       "EPSS and exposure",
       "Analyze",
@@ -673,7 +673,7 @@
     "distractor_strength": "strong",
     "decisive_clue_present": true,
     "plausible_alternative_count": 2,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "The high-EPSS lab issue is the intended runner-up, requiring the learner to weigh probability against isolation and customer-facing authentication impact."
   },
   {
     "id": 30314,
@@ -697,16 +697,16 @@
       1
     ],
     "explanation": "Stakeholders need the remaining risk, interim protection, ownership, and time-bound plan.",
-    "why_correct": "The residual risk, control coverage, accountable owner, and committed remediation date provide decision-relevant and accountable status.",
+    "why_correct": "Residual risk, gateway coverage, named ownership, and a dated commitment tell stakeholders what remains exposed during compatibility testing and who is accountable for closure.",
     "why_wrong": {
-      "0": "Starting work does not eliminate the vulnerability or justify closing the finding.",
-      "2": "Severity without control and business context does not describe current residual risk.",
-      "3": "An exception is time-bound risk treatment, not permanent removal from governance."
+      "0": "Beginning compatibility testing demonstrates progress, but the externally reachable library remains vulnerable and cannot be reported closed.",
+      "2": "The original severity is useful for baseline urgency, but alone it omits whether the gateway control covers the vulnerable path and when the upgrade will finish.",
+      "3": "An approved exception can authorize temporary risk treatment, but eliminating review would allow the control or deadline to expire unnoticed."
     },
-    "second_best": "Only the original scanner severity \u2014 Severity is relevant, but it omits current controls, ownership, and timing.",
+    "second_best": "Only the original scanner severity \u2014 The original severity is useful for baseline urgency, but alone it omits whether the gateway control covers the vulnerable path and when the upgrade will finish.",
     "key_clue": "The patch is delayed while an interim control is active.",
     "trap": "Reporting activity or approval as though it were completed risk reduction.",
-    "takeaway": "Report residual risk, interim controls, ownership, and the dated remediation commitment.",
+    "takeaway": "During a remediation delay, report residual exposure, interim-control coverage, ownership, and the time-bound path to permanent correction.",
     "concept_tags": [
       "remediation reporting",
       "residual risk",
@@ -725,7 +725,7 @@
     "distractor_strength": "strong",
     "decisive_clue_present": true,
     "plausible_alternative_count": 2,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "Severity-only reporting is the strongest incomplete option because it conveys urgency; the item tests the additional governance data needed during a constrained delay."
   },
   {
     "id": 30315,
@@ -749,16 +749,16 @@
       2
     ],
     "explanation": "Volatile evidence may disappear during isolation or shutdown.",
-    "why_correct": "Capture volatile data, then isolate using the approved method and acquire durable artifacts directly addresses the scenario because volatile evidence may disappear during isolation or shutdown.",
+    "why_correct": "Capturing memory and other volatile state before approved isolation preserves short-lived malware evidence, after which durable acquisition supports continued analysis without leaving the host connected.",
     "why_wrong": {
-      "0": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "1": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "3": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "0": "Immediate power-off can stop activity and feels safest, but memory capture cannot occur afterward and short-lived malware or keys may be lost.",
+      "1": "Broad notification may be required once scope and communication triggers are known, but it delays evidence preservation and may alert an intruder before containment.",
+      "3": "Temporary-file cleanup might remove malware artifacts, yet it intentionally alters evidence and can destroy the very short-lived traces the investigation needs."
     },
-    "second_best": "Power off immediately, then attempt memory capture \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "Power off immediately, then attempt memory capture \u2014 Immediate power-off can stop activity and feels safest, but memory capture cannot occur afterward and short-lived malware or keys may be lost.",
     "key_clue": "Volatile evidence may disappear during isolation or shutdown.",
     "trap": "Assuming containment must always precede volatile collection.",
-    "takeaway": "Volatile evidence may disappear during isolation or shutdown.",
+    "takeaway": "When conditions permit, preserve volatile evidence before isolation or shutdown, then collect durable artifacts under the approved response process.",
     "concept_tags": [
       "Evidence preservation",
       "Perform",
@@ -777,7 +777,7 @@
     "distractor_strength": "strong",
     "decisive_clue_present": true,
     "plausible_alternative_count": 2,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "Power-off is a credible containment-first response, but the explicit short-lived malware cue makes volatile collection the time-sensitive dependency."
   },
   {
     "id": 30316,
@@ -801,16 +801,16 @@
       3
     ],
     "explanation": "The shared account activity identifies a bounded set for evidence-based scoping.",
-    "why_correct": "Correlate account logons, process activity, and file changes across the five servers directly addresses the scenario because the shared account activity identifies a bounded set for evidence-based scoping.",
+    "why_correct": "Cross-host correlation of logons, processes, and file modifications distinguishes account access from actual execution and encryption across the five bounded systems.",
     "why_wrong": {
-      "0": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "1": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "2": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "0": "Restoration can reduce outage on the known server, but doing it before scoping risks reinfection and obscures whether the shared account reached other servers.",
+      "1": "The five authentications define a sensible search boundary and may signal lateral movement, but they do not prove ransomware executed or encrypted data on every host.",
+      "2": "Disabling the service account could limit spread, but deleting it and its related logs destroys scoping evidence and may break dependencies without a controlled replacement."
     },
-    "second_best": "Restore the first server before determining scope \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "Delete the service account and all related logs \u2014 Disabling the service account could limit spread, but deleting it and its related logs destroys scoping evidence and may break dependencies without a controlled replacement.",
     "key_clue": "The shared account activity identifies a bounded set for evidence-based scoping.",
     "trap": "Equating authentication activity with confirmed encryption.",
-    "takeaway": "The shared account activity identifies a bounded set for evidence-based scoping.",
+    "takeaway": "Scope ransomware by correlating identity use with execution and file impact; authentication alone neither proves encryption nor justifies immediate restoration.",
     "concept_tags": [
       "Ransomware scoping",
       "Perform",
@@ -820,16 +820,16 @@
     "misconception": "Equating authentication activity with confirmed encryption",
     "objective_id": "3.2",
     "distractor_quality": {
-      "0": "credible_runner_up",
+      "0": "plausible_misconception",
       "1": "credible_runner_up",
-      "2": "plausible_misconception"
+      "2": "credible_runner_up"
     },
     "quality_score": 4,
     "reasoning_depth": "analysis",
     "distractor_strength": "strong",
     "decisive_clue_present": true,
     "plausible_alternative_count": 2,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "Declaring all five encrypted is intentionally plausible during a fast-moving incident, but the question rewards distinguishing a scoping lead from confirmed impact."
   },
   {
     "id": 30317,
@@ -853,16 +853,16 @@
       0
     ],
     "explanation": "Key rotation contains the credential while controlled replacement protects dependencies.",
-    "why_correct": "Disable the exposed key, issue a controlled replacement, and review its activity directly addresses the scenario because key rotation contains the credential while controlled replacement protects dependencies.",
+    "why_correct": "Disabling the observed key removes the compromised credential, a controlled replacement maintains dependent services, and activity review establishes what bucket access occurred.",
     "why_wrong": {
-      "1": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "2": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "3": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "1": "Deleting reachable buckets could prevent further theft, but it destroys business data and evidence without showing that those buckets were altered or exposed.",
+      "2": "Keeping the key avoids an outage and supports observation, yet it permits continued enumeration and possible access by the unexpected source.",
+      "3": "Blocking the ASN can stop the current origin with less application impact, but the valid key can be reused from another network and therefore remains compromised."
     },
-    "second_best": "Delete every bucket the identity can access \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "Block the ASN and assume the key is safe \u2014 Blocking the ASN can stop the current origin with less application impact, but the valid key can be reused from another network and therefore remains compromised.",
     "key_clue": "Key rotation contains the credential while controlled replacement protects dependencies.",
     "trap": "Relying on network blocking instead of revoking compromised credentials.",
-    "takeaway": "Key rotation contains the credential while controlled replacement protects dependencies.",
+    "takeaway": "Contain cloud-key compromise at the credential while managing service dependencies, then scope use through audit activity.",
     "concept_tags": [
       "Cloud containment",
       "Perform",
@@ -872,16 +872,16 @@
     "misconception": "Relying on network blocking instead of revoking compromised credentials",
     "objective_id": "3.2",
     "distractor_quality": {
-      "1": "credible_runner_up",
+      "1": "plausible_misconception",
       "2": "credible_runner_up",
-      "3": "plausible_misconception"
+      "3": "credible_runner_up"
     },
     "quality_score": 4,
     "reasoning_depth": "analysis",
     "distractor_strength": "strong",
     "decisive_clue_present": true,
     "plausible_alternative_count": 2,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "ASN blocking is the operationally attractive runner-up because it is low impact; its weakness is failing to invalidate a portable exposed key."
   },
   {
     "id": 30318,
@@ -905,16 +905,16 @@
       1
     ],
     "explanation": "Recurring traffic plus a persistence artifact shows eradication is incomplete.",
-    "why_correct": "Remove the persistence mechanism, validate related artifacts, and monitor for recurrence directly addresses the scenario because recurring traffic plus a persistence artifact shows eradication is incomplete.",
+    "why_correct": "The WMI subscription is a verified persistence path consistent with renewed traffic; removing it, checking associated consumers and payloads, and monitoring completes eradication validation.",
     "why_wrong": {
-      "0": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "2": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "3": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "0": "Removing the original malware file is necessary, but the renewed connection and WMI persistence prove the host is not yet clean enough for closure.",
+      "2": "Suppressing DNS logs would reduce repeated alerts, but it removes detection visibility while leaving both the callback and persistence mechanism active.",
+      "3": "Document restoration supports recovery, yet recovering before removing persistence can reintroduce malicious activity and contaminate restored operations."
     },
-    "second_best": "Close the incident because the original file was removed \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "Restore user documents without addressing persistence \u2014 Document restoration supports recovery, yet recovering before removing persistence can reintroduce malicious activity and contaminate restored operations.",
     "key_clue": "Recurring traffic plus a persistence artifact shows eradication is incomplete.",
     "trap": "Equating removal of the initial payload with eradication.",
-    "takeaway": "Recurring traffic plus a persistence artifact shows eradication is incomplete.",
+    "takeaway": "Eradication must remove persistence and validate related artifacts before recovery or closure; recurring telemetry is evidence the phase is incomplete.",
     "concept_tags": [
       "Malware eradication",
       "Perform",
@@ -924,16 +924,16 @@
     "misconception": "Equating removal of the initial payload with eradication",
     "objective_id": "3.2",
     "distractor_quality": {
-      "0": "credible_runner_up",
+      "0": "plausible_misconception",
       "2": "credible_runner_up",
-      "3": "plausible_misconception"
+      "3": "credible_runner_up"
     },
     "quality_score": 4,
     "reasoning_depth": "analysis",
     "distractor_strength": "strong",
     "decisive_clue_present": true,
     "plausible_alternative_count": 2,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "Proceeding to recovery is the strongest phase-order temptation, while the observed WMI subscription makes further eradication mandatory."
   },
   {
     "id": 30319,
@@ -957,16 +957,16 @@
       2
     ],
     "explanation": "The observed coordination failure calls for owned, testable process improvements.",
-    "why_correct": "Update severity criteria and notification triggers, assign owners, and exercise them directly addresses the scenario because the observed coordination failure calls for owned, testable process improvements.",
+    "why_correct": "Owned severity definitions and notification triggers directly correct the inconsistent classification and delayed briefing; exercising them verifies the process works before another incident.",
     "why_wrong": {
-      "0": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "1": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "3": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "0": "A cleaner timeline may reduce scrutiny, but omitting the delay corrupts the record and prevents the organization from learning why notification failed.",
+      "1": "A new gateway could reduce future phishing volume, but no evidence ties the communication delay to gateway capability or identifies a technical root cause.",
+      "3": "Archiving preserves the case record, yet making no plan change leaves the same severity and escalation ambiguity in place."
     },
-    "second_best": "Rewrite the timeline to omit the delay \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "Purchase a new email gateway without root-cause review \u2014 A new gateway could reduce future phishing volume, but no evidence ties the communication delay to gateway capability or identifies a technical root cause.",
     "key_clue": "The observed coordination failure calls for owned, testable process improvements.",
     "trap": "Treating a technology purchase as a substitute for process correction.",
-    "takeaway": "The observed coordination failure calls for owned, testable process improvements.",
+    "takeaway": "Lessons learned should convert observed coordination failures into assigned, testable changes rather than conceal the timeline or assume a tool will fix process.",
     "concept_tags": [
       "Lessons learned",
       "Explain",
@@ -985,7 +985,7 @@
     "distractor_strength": "strong",
     "decisive_clue_present": true,
     "plausible_alternative_count": 2,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "The gateway purchase is plausible after phishing, but the measured failure was response governance, allowing the item to distinguish incident cause from process lesson."
   },
   {
     "id": 30320,
@@ -1009,16 +1009,16 @@
       3
     ],
     "explanation": "The exercise exposed a decision-rights gap that blocks timely containment.",
-    "why_correct": "Document an on-call decision authority and escalation path directly addresses the scenario because the exercise exposed a decision-rights gap that blocks timely containment.",
+    "why_correct": "A documented after-hours authority and escalation route resolves the exact decision bottleneck before a real event requires rapid isolation of the revenue system.",
     "why_wrong": {
-      "0": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "1": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "2": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "0": "Additional indicators could make technical investigation more realistic, but they do not identify who is empowered to accept the business impact of isolation.",
+      "1": "Excluding the revenue system avoids the unresolved decision in future exercises, but preserves the highest-consequence gap in the actual response plan.",
+      "2": "A real incident might force an executive decision, yet waiting converts a safe exercise finding into preventable containment delay under pressure."
     },
-    "second_best": "Add more fictional malware indicators to the exercise \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "Add more fictional malware indicators to the exercise \u2014 Additional indicators could make technical investigation more realistic, but they do not identify who is empowered to accept the business impact of isolation.",
     "key_clue": "The exercise exposed a decision-rights gap that blocks timely containment.",
     "trap": "Focusing on technical detail while authority remains undefined.",
-    "takeaway": "The exercise exposed a decision-rights gap that blocks timely containment.",
+    "takeaway": "Use tabletop findings to establish decision rights and escalation paths for high-impact containment before an incident occurs.",
     "concept_tags": [
       "Tabletop preparation",
       "Explain",
@@ -1037,7 +1037,7 @@
     "distractor_strength": "strong",
     "decisive_clue_present": true,
     "plausible_alternative_count": 2,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "More technical exercise detail is a believable improvement, but the scenario deliberately identifies authority\u2014not detection fidelity\u2014as the blocking dependency."
   },
   {
     "id": 30321,
@@ -1055,22 +1055,22 @@
       "Trend of overdue KEV findings weighted by exposure and business criticality",
       "Total findings closed regardless of severity",
       "Average scanner runtime per subnet",
-      "Number of analysts who viewed the dashboard"
+      "Percentage of critical findings remediated within the standard SLA"
     ],
     "answer": [
       0
     ],
     "explanation": "A risk-weighted trend exposes what aggregate closure counts conceal.",
-    "why_correct": "Trend of overdue KEV findings weighted by exposure and business criticality directly addresses the scenario because a risk-weighted trend exposes what aggregate closure counts conceal.",
+    "why_correct": "A trend weighted for KEV status, external exposure, and asset criticality reveals whether the remaining overdue findings represent increasing business risk despite falling totals.",
     "why_wrong": {
-      "1": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "2": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "3": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "1": "Closure count is easy to understand and explains the falling backlog, but closing many low-risk items can conceal worsening exposure to known-exploited flaws.",
+      "2": "Scan runtime is operationally useful for capacity planning, yet it says nothing about whether exploitable vulnerabilities remain past due on critical assets.",
+      "3": "Critical-SLA compliance is a credible performance measure, but standard severity alone can combine isolated findings with internet-facing KEVs and hide the specific risk increase."
     },
-    "second_best": "Total findings closed regardless of severity \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "Percentage of critical findings remediated within the standard SLA \u2014 Critical-SLA compliance is a credible performance measure, but standard severity alone can combine isolated findings with internet-facing KEVs and hide the specific risk increase.",
     "key_clue": "A risk-weighted trend exposes what aggregate closure counts conceal.",
     "trap": "Using remediation volume as a proxy for risk reduction.",
-    "takeaway": "A risk-weighted trend exposes what aggregate closure counts conceal.",
+    "takeaway": "Executive vulnerability reporting should expose changes in consequential residual risk, not only volume, scanner efficiency, or uncontextualized SLA performance.",
     "concept_tags": [
       "Vulnerability dashboard",
       "Explain",
@@ -1080,16 +1080,16 @@
     "misconception": "Using remediation volume as a proxy for risk reduction",
     "objective_id": "4.1",
     "distractor_quality": {
-      "1": "credible_runner_up",
+      "1": "plausible_misconception",
       "2": "credible_runner_up",
-      "3": "plausible_misconception"
+      "3": "credible_runner_up"
     },
     "quality_score": 4,
     "reasoning_depth": "analysis",
     "distractor_strength": "strong",
     "decisive_clue_present": true,
     "plausible_alternative_count": 2,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "Critical-SLA compliance is deliberately strong because it measures timeliness; risk weighting is still needed to surface the worsening exposed KEV population."
   },
   {
     "id": 30322,
@@ -1106,23 +1106,23 @@
     "options": [
       "A promise that exploitation is unlikely",
       "Risk rationale, compensating controls, accountable owner, and expiration date",
-      "The scanner\u2019s logo and report color",
+      "The critical severity and a manager\u2019s approval email",
       "An exception with no end date to reduce paperwork"
     ],
     "answer": [
       1
     ],
     "explanation": "A governed exception needs explicit ownership, controls, rationale, and review timing.",
-    "why_correct": "Risk rationale, compensating controls, accountable owner, and expiration date directly addresses the scenario because a governed exception needs explicit ownership, controls, rationale, and review timing.",
+    "why_correct": "The rationale documents why risk is accepted, compensating controls reduce it, the owner is accountable, and expiration forces reassessment rather than indefinite waiver.",
     "why_wrong": {
-      "0": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "2": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "3": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "0": "Low perceived exploit likelihood can support the rationale, but an unsupported promise neither quantifies exposure nor defines controls, ownership, or review.",
+      "2": "Critical severity plus manager approval demonstrates awareness and authority, yet it does not record residual risk, compensating-control coverage, or a time limit.",
+      "3": "An open-ended exception reduces administration, but it can silently outlive the business need and any effective compensating control."
     },
-    "second_best": "A promise that exploitation is unlikely \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "The critical severity and a manager\u2019s approval email \u2014 Critical severity plus manager approval demonstrates awareness and authority, yet it does not record residual risk, compensating-control coverage, or a time limit.",
     "key_clue": "A governed exception needs explicit ownership, controls, rationale, and review timing.",
     "trap": "Treating risk acceptance as permanent remediation.",
-    "takeaway": "A governed exception needs explicit ownership, controls, rationale, and review timing.",
+    "takeaway": "A vulnerability exception is governed, temporary risk acceptance: document context and controls, assign ownership, and enforce expiration.",
     "concept_tags": [
       "Exception reporting",
       "Explain",
@@ -1141,7 +1141,7 @@
     "distractor_strength": "strong",
     "decisive_clue_present": true,
     "plausible_alternative_count": 2,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "Severity with written approval is a credible governance artifact, but Tier 4 reasoning requires identifying the missing treatment detail and temporal boundary."
   },
   {
     "id": 30323,
@@ -1165,16 +1165,16 @@
       2
     ],
     "explanation": "Board communication should enable risk decisions at the appropriate level.",
-    "why_correct": "Business impact, risk trend, control status, decisions needed, and recovery forecast directly addresses the scenario because board communication should enable risk decisions at the appropriate level.",
+    "why_correct": "Business impact, risk movement, current controls, decisions, and forecast give the board enough context to oversee the missed target without operational exploit detail.",
     "why_wrong": {
-      "0": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "1": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "3": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "0": "Raw plugin output preserves technical precision and supports analyst remediation, but its volume and exploit detail obscure the board-level risk and requested decision.",
+      "1": "Commands demonstrate remediation effort and may help engineering review, yet they do not explain business consequence, remaining exposure, or recovery timing.",
+      "3": "A technical packet can document the delay thoroughly, but without an explicit decision request the board cannot act on resources, risk acceptance, or priorities."
     },
-    "second_best": "Raw scanner output with every plugin detail \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "A technical packet with no decision request \u2014 A technical packet can document the delay thoroughly, but without an explicit decision request the board cannot act on resources, risk acceptance, or priorities.",
     "key_clue": "Board communication should enable risk decisions at the appropriate level.",
     "trap": "Assuming more technical detail always improves executive reporting.",
-    "takeaway": "Board communication should enable risk decisions at the appropriate level.",
+    "takeaway": "Tailor board updates to business consequence, residual risk, control status, forecast, and the governance decision required.",
     "concept_tags": [
       "Audience tailoring",
       "Explain",
@@ -1184,16 +1184,16 @@
     "misconception": "Assuming more technical detail always improves executive reporting",
     "objective_id": "4.1",
     "distractor_quality": {
-      "0": "credible_runner_up",
+      "0": "plausible_misconception",
       "1": "credible_runner_up",
-      "3": "plausible_misconception"
+      "3": "credible_runner_up"
     },
     "quality_score": 5,
     "reasoning_depth": "evaluation",
     "distractor_strength": "expert",
     "decisive_clue_present": true,
     "plausible_alternative_count": 2,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "The complete technical packet is the strongest runner-up because it may be accurate; the missing decision framing makes it ineffective for this audience."
   },
   {
     "id": 30324,
@@ -1217,16 +1217,16 @@
       3
     ],
     "explanation": "Clear separation of confirmed facts and uncertainty preserves accuracy and cadence.",
-    "why_correct": "State confirmed facts, current protective actions, known uncertainty, and the next update time directly addresses the scenario because clear separation of confirmed facts and uncertainty preserves accuracy and cadence.",
+    "why_correct": "Confirmed facts, protective steps, explicit uncertainty, and a promised cadence inform customers without speculating about data access while scope changes.",
     "why_wrong": {
-      "0": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "1": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "2": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "0": "Saying no data was accessed could reassure customers, but incomplete evidence cannot support that claim and later correction would damage trust.",
+      "1": "Sharing analyst chat appears maximally transparent and may reveal emerging leads, yet unverified discussion can spread errors and expose sensitive investigative detail.",
+      "2": "Waiting for final forensics maximizes certainty, but active-breach stakeholders need timely protective information and a predictable update schedule."
     },
-    "second_best": "Assert that no data was accessed because evidence is incomplete \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "Delay all communication until every forensic question is resolved \u2014 Waiting for final forensics maximizes certainty, but active-breach stakeholders need timely protective information and a predictable update schedule.",
     "key_clue": "Clear separation of confirmed facts and uncertainty preserves accuracy and cadence.",
     "trap": "Presenting absence of evidence as evidence of absence.",
-    "takeaway": "Clear separation of confirmed facts and uncertainty preserves accuracy and cadence.",
+    "takeaway": "During an evolving incident, separate verified facts from uncertainty and communicate protective action on a defined cadence.",
     "concept_tags": [
       "Incident status update",
       "Explain",
@@ -1236,16 +1236,16 @@
     "misconception": "Presenting absence of evidence as evidence of absence",
     "objective_id": "4.2",
     "distractor_quality": {
-      "0": "credible_runner_up",
+      "0": "plausible_misconception",
       "1": "credible_runner_up",
-      "2": "plausible_misconception"
+      "2": "credible_runner_up"
     },
     "quality_score": 5,
     "reasoning_depth": "evaluation",
     "distractor_strength": "expert",
     "decisive_clue_present": true,
     "plausible_alternative_count": 2,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "Waiting is a strong accuracy-oriented alternative; the item tests whether learners can preserve accuracy without abandoning timely incident communication."
   },
   {
     "id": 30325,
@@ -1263,22 +1263,22 @@
       "Preserve a decision log and provide counsel time-stamped confirmed facts and updates",
       "Wait for final root cause before documenting decisions",
       "Let each technical team contact regulators independently",
-      "Change timestamps so the timeline appears complete"
+      "Submit the initial scanner alert immediately as the complete incident record"
     ],
     "answer": [
       0
     ],
     "explanation": "A contemporaneous decision log supports defensible, coordinated reporting under uncertainty.",
-    "why_correct": "Preserve a decision log and provide counsel time-stamped confirmed facts and updates directly addresses the scenario because a contemporaneous decision log supports defensible, coordinated reporting under uncertainty.",
+    "why_correct": "A contemporaneous decision log and time-stamped facts let counsel evaluate deadlines as knowledge evolves, while coordinated updates preserve an auditable reporting basis.",
     "why_wrong": {
-      "1": "This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
-      "2": "This conclusion exceeds what the available evidence establishes and could disrupt the response.",
-      "3": "This focuses on a weaker signal while leaving the scenario\u2019s decisive risk or validation need unresolved."
+      "1": "Final root cause would improve the report, but waiting to document decisions risks missing a deadline triggered before forensic completion and loses contemporaneous reasoning.",
+      "2": "Direct technical-team outreach may appear faster, but uncoordinated regulator contacts can conflict, disclose unverified details, and bypass counsel\u2019s legal assessment.",
+      "3": "Submitting the scanner alert immediately creates a timestamp, but a raw alert is not a complete incident record and may misstate scope before counsel determines applicability."
     },
-    "second_best": "Wait for final root cause before documenting decisions \u2014 This may be relevant later, but it does not best address the evidence and decision point in the scenario.",
+    "second_best": "Submit the initial scanner alert immediately as the complete incident record \u2014 Submitting the scanner alert immediately creates a timestamp, but a raw alert is not a complete incident record and may misstate scope before counsel determines applicability.",
     "key_clue": "A contemporaneous decision log supports defensible, coordinated reporting under uncertainty.",
     "trap": "Believing incomplete scope prevents timely reporting decisions.",
-    "takeaway": "A contemporaneous decision log supports defensible, coordinated reporting under uncertainty.",
+    "takeaway": "Preserve time-stamped facts and decisions throughout an evolving investigation so counsel can meet reporting duties without waiting for perfect scope.",
     "concept_tags": [
       "Regulatory timeline",
       "Explain",
@@ -1288,15 +1288,15 @@
     "misconception": "Believing incomplete scope prevents timely reporting decisions",
     "objective_id": "4.2",
     "distractor_quality": {
-      "1": "credible_runner_up",
+      "1": "plausible_misconception",
       "2": "credible_runner_up",
-      "3": "plausible_misconception"
+      "3": "credible_runner_up"
     },
     "quality_score": 5,
     "reasoning_depth": "evaluation",
     "distractor_strength": "expert",
     "decisive_clue_present": true,
     "plausible_alternative_count": 2,
-    "psychometric_notes": "The item requires the learner to distinguish the evidence-driven action from plausible but premature or incomplete alternatives."
+    "psychometric_notes": "Immediate alert submission is deliberately time-conscious, but Tier 4 analysis requires distinguishing prompt evidence preservation from premature external reporting."
   }
 ]

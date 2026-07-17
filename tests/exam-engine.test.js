@@ -145,6 +145,9 @@ test('question bank v2 batch 2 satisfies its schema, quality, and integration co
     assert.ok(Object.values(q.distractor_quality).every(v=>['credible_runner_up','plausible_misconception'].includes(v)));
     assert.equal(q.plausible_alternative_count,credible);
     assert.ok(credible>=(q.tier===2?1:2));
+    const secondBestIndex=q.options.findIndex(option=>q.second_best.startsWith(`${option} — `));
+    assert.ok(incorrect.includes(secondBestIndex),`${q.id} second_best must identify an incorrect option`);
+    assert.equal(q.distractor_quality[secondBestIndex],'credible_runner_up',`${q.id} second_best must be a credible runner-up`);
     assert.ok(Number.isInteger(q.quality_score)&&q.quality_score>=4&&q.quality_score<=5);
     assert.ok(['application','analysis','evaluation'].includes(q.reasoning_depth));
     if(q.tier>=3)assert.ok(['analysis','evaluation'].includes(q.reasoning_depth));
@@ -165,4 +168,29 @@ test('question bank v2 batch 2 satisfies its schema, quality, and integration co
   assert.match(appSource,/Promise\.all\(EXAM_PACKS\.map/);
   const workerSource=fs.readFileSync(path.join(__dirname,'../service-worker.js'),'utf8');
   assert.match(workerSource,/questions\/exam-sim-v2-batch2\.json/);
+});
+
+test('question bank v2 batch 2 contains no duplicated rationale boilerplate',()=>{
+  const batch=JSON.parse(fs.readFileSync(path.join(__dirname,'../questions/exam-sim-v2-batch2.json'),'utf8'));
+  const rationaleFields=['why_correct','second_best','takeaway','psychometric_notes'];
+  const entries=batch.flatMap(q=>[
+    ...rationaleFields.map(field=>({id:q.id,field,text:q[field]})),
+    ...Object.entries(q.why_wrong).map(([index,text])=>({id:q.id,field:`why_wrong.${index}`,text}))
+  ]);
+  const words=text=>text.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(word=>word.length>2);
+  const normalized=text=>words(text).join(' ');
+  const tokenSet=text=>new Set(words(text));
+  const similarity=(left,right)=>{
+    const a=tokenSet(left),b=tokenSet(right);
+    const intersection=[...a].filter(token=>b.has(token)).length;
+    return intersection/(a.size+b.size-intersection);
+  };
+  for(let i=0;i<entries.length;i++)for(let j=i+1;j<entries.length;j++){
+    const a=entries[i],b=entries[j];
+    if(a.id===b.id)continue; // second_best intentionally includes one rationale from its own item
+    assert.notEqual(normalized(a.text),normalized(b.text),`${a.id} ${a.field} duplicates ${b.id} ${b.field}`);
+    if(words(a.text).length>=10&&words(b.text).length>=10){
+      assert.ok(similarity(a.text,b.text)<0.72,`${a.id} ${a.field} is near-identical to ${b.id} ${b.field}`);
+    }
+  }
 });
