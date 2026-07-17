@@ -50,7 +50,7 @@ test('question bank v2 batch 1 satisfies its schema and content contract',()=>{
   assert.equal(batch.length,bank.length,'production bank must contain no legacy questions');
   assert.equal(legacy.some(q=>q.id>=30201&&q.id<=30225),false,'legacy bank must contain no production questions');
   const appSource=fs.readFileSync(path.join(__dirname,'../js/app.js'),'utf8');
-  assert.match(appSource,/const EXAM_PACK='questions\/exam-sim-v2-batch1\.json'/,'exam modes must load only the production bank');
+  assert.match(appSource,/questions\/exam-sim-v2-batch1\.json/,'exam modes must include the Batch 1 production bank');
 
   const objectiveLabels={
     '1.2':'Analyze indicators of potentially malicious activity',
@@ -106,4 +106,91 @@ test('question bank v2 batch 1 satisfies its schema and content contract',()=>{
   assert.deepEqual(countBy('tier'),{'2':8,'3':14,'4':3});
   assert.deepEqual(countBy('difficulty'),{'Exam':14,'Exam Killer':3,'Practice':8});
   assert.deepEqual(countBy('kind'),{multi:4,single:21});
+});
+
+test('question bank v2 batch 2 satisfies its schema, quality, and integration contract',()=>{
+  const batch1Path=path.join(__dirname,'../questions/exam-sim-v2-batch1.json');
+  const batch2Path=path.join(__dirname,'../questions/exam-sim-v2-batch2.json');
+  const batch1=JSON.parse(fs.readFileSync(batch1Path,'utf8'));
+  const batch2=JSON.parse(fs.readFileSync(batch2Path,'utf8'));
+  assert.equal(batch2.length,25);
+  assert.deepEqual(batch2.map(q=>q.id),Array.from({length:25},(_,i)=>30301+i));
+  const allIds=[...batch1,...batch2].map(q=>q.id);
+  assert.equal(new Set(allIds).size,allIds.length,'IDs must be globally unique across v2 batches');
+
+  const objectives={
+    '1.2':'Analyze indicators of potentially malicious activity',
+    '2.1':'Implement vulnerability scanning methods and concepts',
+    '2.2':'Analyze output from vulnerability assessment tools',
+    '2.3':'Analyze data to prioritize vulnerabilities',
+    '2.4':'Recommend controls to mitigate attacks and software vulnerabilities',
+    '3.1':'Explain concepts related to attack methodology frameworks',
+    '3.2':'Perform incident response activities',
+    '3.3':'Explain preparation and post-incident activity phases of the incident response lifecycle',
+    '4.1':'Explain the importance of vulnerability management reporting and communication',
+    '4.2':'Explain the importance of incident response reporting and communication'
+  };
+  const required=['id','domain','objective_id','objective','tier','difficulty','topic','kind','select_limit','question_type','qtype','question','options','answer','explanation','why_correct','why_wrong','second_best','key_clue','trap','takeaway','concept_tags','mistake_type','misconception','distractor_quality','quality_score','reasoning_depth','distractor_strength','decisive_clue_present','plausible_alternative_count','psychometric_notes'];
+  batch2.forEach(q=>{
+    required.forEach(field=>assert.ok(Object.hasOwn(q,field),`${q.id} missing ${field}`));
+    assert.equal(q.objective,objectives[q.objective_id],`${q.id} has an unofficial objective`);
+    assert.equal(q.kind,'single'); assert.equal(q.qtype,'SINGLE'); assert.equal(q.question_type,'NEXT');
+    assert.equal(q.select_limit,1); assert.equal(q.options.length,4); assert.equal(new Set(q.options).size,4);
+    assert.equal(q.answer.length,1); assert.ok(Number.isInteger(q.answer[0])&&q.answer[0]>=0&&q.answer[0]<4);
+    const incorrect=[0,1,2,3].filter(i=>i!==q.answer[0]);
+    incorrect.forEach(i=>{assert.ok(q.why_wrong[i]?.trim());assert.ok(q.distractor_quality[i]);});
+    assert.deepEqual(Object.keys(q.why_wrong).map(Number).sort(),incorrect);
+    assert.deepEqual(Object.keys(q.distractor_quality).map(Number).sort(),incorrect);
+    const credible=Object.values(q.distractor_quality).filter(v=>v==='credible_runner_up').length;
+    assert.ok(Object.values(q.distractor_quality).every(v=>['credible_runner_up','plausible_misconception'].includes(v)));
+    assert.equal(q.plausible_alternative_count,credible);
+    assert.ok(credible>=(q.tier===2?1:2));
+    const secondBestIndex=q.options.findIndex(option=>q.second_best.startsWith(`${option} — `));
+    assert.ok(incorrect.includes(secondBestIndex),`${q.id} second_best must identify an incorrect option`);
+    assert.equal(q.distractor_quality[secondBestIndex],'credible_runner_up',`${q.id} second_best must be a credible runner-up`);
+    assert.ok(Number.isInteger(q.quality_score)&&q.quality_score>=4&&q.quality_score<=5);
+    assert.ok(['application','analysis','evaluation'].includes(q.reasoning_depth));
+    if(q.tier>=3)assert.ok(['analysis','evaluation'].includes(q.reasoning_depth));
+    assert.ok(['acceptable','strong','expert'].includes(q.distractor_strength));
+    if(q.tier>=3)assert.ok(['strong','expert'].includes(q.distractor_strength));
+    assert.equal(q.decisive_clue_present,true);
+    assert.ok(q.psychometric_notes.trim()); assert.ok(q.misconception.trim());
+    assert.ok(Array.isArray(q.concept_tags)&&q.concept_tags.length>0);
+    assert.equal(engine.isPbq(q),false);
+  });
+  const countBy=field=>Object.fromEntries([...new Set(batch2.map(q=>q[field]))].sort().map(v=>[v,batch2.filter(q=>q[field]===v).length]));
+  assert.deepEqual(countBy('domain'),{'Incident Response and Management':6,'Reporting and Communication':6,'Security Operations':7,'Vulnerability Management':6});
+  assert.deepEqual(countBy('tier'),{'2':6,'3':16,'4':3});
+  assert.deepEqual(countBy('difficulty'),{'Exam':16,'Exam Killer':3,'Practice':6});
+
+  const appSource=fs.readFileSync(path.join(__dirname,'../js/app.js'),'utf8');
+  assert.match(appSource,/const EXAM_PACKS=\['questions\/exam-sim-v2-batch1\.json','questions\/exam-sim-v2-batch2\.json'\]/);
+  assert.match(appSource,/Promise\.all\(EXAM_PACKS\.map/);
+  const workerSource=fs.readFileSync(path.join(__dirname,'../service-worker.js'),'utf8');
+  assert.match(workerSource,/questions\/exam-sim-v2-batch2\.json/);
+});
+
+test('question bank v2 batch 2 contains no duplicated rationale boilerplate',()=>{
+  const batch=JSON.parse(fs.readFileSync(path.join(__dirname,'../questions/exam-sim-v2-batch2.json'),'utf8'));
+  const rationaleFields=['why_correct','second_best','takeaway','psychometric_notes'];
+  const entries=batch.flatMap(q=>[
+    ...rationaleFields.map(field=>({id:q.id,field,text:q[field]})),
+    ...Object.entries(q.why_wrong).map(([index,text])=>({id:q.id,field:`why_wrong.${index}`,text}))
+  ]);
+  const words=text=>text.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(word=>word.length>2);
+  const normalized=text=>words(text).join(' ');
+  const tokenSet=text=>new Set(words(text));
+  const similarity=(left,right)=>{
+    const a=tokenSet(left),b=tokenSet(right);
+    const intersection=[...a].filter(token=>b.has(token)).length;
+    return intersection/(a.size+b.size-intersection);
+  };
+  for(let i=0;i<entries.length;i++)for(let j=i+1;j<entries.length;j++){
+    const a=entries[i],b=entries[j];
+    if(a.id===b.id)continue; // second_best intentionally includes one rationale from its own item
+    assert.notEqual(normalized(a.text),normalized(b.text),`${a.id} ${a.field} duplicates ${b.id} ${b.field}`);
+    if(words(a.text).length>=10&&words(b.text).length>=10){
+      assert.ok(similarity(a.text,b.text)<0.72,`${a.id} ${a.field} is near-identical to ${b.id} ${b.field}`);
+    }
+  }
 });
