@@ -1,0 +1,1327 @@
+[
+  {
+    "id": 30301,
+    "domain": "Security Operations",
+    "objective": "Analyze indicators of potentially malicious activity",
+    "objective_id": "1.2",
+    "tier": 2,
+    "difficulty": "Practice",
+    "topic": "Windows logon correlation",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "NEXT",
+    "qtype": "SINGLE",
+    "question": "Event ID 4624 shows logon type 3 to a file server, followed by 5145 access to a sensitive share from the same workstation. The user normally accesses that share interactively. What should the analyst do NEXT?",
+    "options": [
+      "Compare the source workstation, account, and accessed objects with the user baseline",
+      "Disable the account immediately and preserve its active sessions",
+      "Collect memory from the file server before reviewing the share events",
+      "Block all type 3 logons to the file server"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Correlating the network logon with object access and baseline establishes whether this is expected SMB use or credential misuse before disruptive action.",
+    "why_correct": "Correlating the network logon with object access and baseline establishes whether this is expected SMB use or credential misuse before disruptive action.",
+    "why_wrong": {
+      "1": "Account containment is defensible if misuse is confirmed, but the events can still represent normal SMB activity.",
+      "2": "Memory capture may be useful later, but the current question is whether the authenticated access is anomalous.",
+      "3": "Network logons are required for legitimate file access, so a global block has excessive scope."
+    },
+    "second_best": "Disabling the account is a credible containment step after anomalous use is validated.",
+    "key_clue": "The same source and account link authentication to sensitive-share access, but the baseline is not yet compared.",
+    "trap": "Treating a common network logon type as malicious without context.",
+    "takeaway": "Correlate authentication, object access, and normal behavior before containment.",
+    "concept_tags": [
+      "Event ID 4624",
+      "Event ID 5145",
+      "SMB",
+      "baseline"
+    ],
+    "mistake_type": "premature containment",
+    "misconception": "Misread authentication sequence",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "plausible_misconception",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Tier 2 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30302,
+    "domain": "Security Operations",
+    "objective": "Use appropriate tools or techniques to determine malicious activity",
+    "objective_id": "1.3",
+    "tier": 2,
+    "difficulty": "Practice",
+    "topic": "Linux process investigation",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "MOST appropriate",
+    "qtype": "SINGLE",
+    "question": "A Linux alert identifies a deleted executable still running as PID 488. lsof shows /tmp/.cache (deleted), and ss shows one established external connection. Which action is MOST appropriate FIRST?",
+    "options": [
+      "Record the process, socket, and executable details, then isolate the host",
+      "Kill PID 488 and rescan the filesystem",
+      "Block the destination at the firewall and leave the host connected",
+      "Reboot the host into rescue mode for disk acquisition"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "A short volatile capture followed immediately by isolation preserves the deleted executable context and contains active communication.",
+    "why_correct": "A short volatile capture followed immediately by isolation preserves the deleted executable context and contains active communication.",
+    "why_wrong": {
+      "1": "Killing the process interrupts one symptom but loses volatile evidence and may not stop persistence.",
+      "2": "Destination blocking is narrow containment; the process can use another address or move internally.",
+      "3": "Rebooting can support later disk work but destroys the live process and connection evidence."
+    },
+    "second_best": "Killing the process is fast containment, but it sacrifices evidence and treats only the visible symptom.",
+    "key_clue": "The executable is deleted yet running and has an active socket, making volatile details both valuable and time-sensitive.",
+    "trap": "Eradicating the process before preserving volatile evidence.",
+    "takeaway": "Capture time-sensitive evidence without allowing active compromise to remain uncontained.",
+    "concept_tags": [
+      "Linux",
+      "lsof",
+      "ss",
+      "deleted executable"
+    ],
+    "mistake_type": "wrong incident phase",
+    "misconception": "Collected evidence after eradication",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "plausible_misconception",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Tier 2 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30303,
+    "domain": "Security Operations",
+    "objective": "Analyze indicators of potentially malicious activity",
+    "objective_id": "1.2",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "PowerShell detection engineering",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "BEST",
+    "qtype": "SINGLE",
+    "question": "A rule alerts on encoded PowerShell. It fires on a signed deployment agent and on winword.exe spawning powershell.exe with a hidden window. Script-block logs exist, but command-line logging is incomplete on older hosts. What is the BEST tuning change?",
+    "options": [
+      "Retain the behavior rule, suppress the signed agent only with signer, path, and parent constraints, and prioritize script-block telemetry",
+      "Suppress all encoded PowerShell launched by SYSTEM because the deployment agent uses that account",
+      "Alert only when the encoded command contacts a known-bad domain",
+      "Replace the rule with a hash block for the observed script"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "A tightly constrained exception removes known automation noise while retaining the suspicious Office-child behavior and compensating for incomplete command-line coverage with script-block data.",
+    "why_correct": "A tightly constrained exception removes known automation noise while retaining the suspicious Office-child behavior and compensating for incomplete command-line coverage with script-block data.",
+    "why_wrong": {
+      "1": "SYSTEM context is widely abused and is broader than the validated deployment-agent pattern.",
+      "2": "Known-bad destinations improve confidence but miss new infrastructure and offline payloads.",
+      "3": "A hash block is brittle and does not preserve behavioral coverage for variants."
+    },
+    "second_best": "Requiring network contact produces higher-confidence alerts, but it delays detection and misses non-network activity.",
+    "key_clue": "One firing has a stable signed-agent context while the other has a high-risk parent and window behavior.",
+    "trap": "Tuning on a broad account or single IOC instead of validated process context.",
+    "takeaway": "Use narrow contextual exceptions and retain behavior-based coverage.",
+    "concept_tags": [
+      "PowerShell",
+      "script block logging",
+      "detection tuning",
+      "parent process"
+    ],
+    "mistake_type": "overbroad suppression",
+    "misconception": "Stopped after first benign pattern",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tier 3 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30304,
+    "domain": "Security Operations",
+    "objective": "Use appropriate tools or techniques to determine malicious activity",
+    "objective_id": "1.3",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "LOLBins correlation",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "MOST defensible",
+    "qtype": "SINGLE",
+    "question": "SIEM records mshta.exe fetching an HTTPS resource, Event ID 4688 shows it was launched by explorer.exe, proxy logs show a newly registered domain, and EDR records no file write. What is the MOST defensible conclusion?",
+    "options": [
+      "Likely proxy execution through a LOLBin that requires scoping for follow-on activity",
+      "Confirmed malware installation with filesystem persistence",
+      "Normal browser activity because explorer.exe launched the process",
+      "Confirmed data exfiltration through the HTTPS session"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The process, destination context, and no-file behavior support suspicious mshta proxy execution, but do not prove persistence or exfiltration.",
+    "why_correct": "The process, destination context, and no-file behavior support suspicious mshta proxy execution, but do not prove persistence or exfiltration.",
+    "why_wrong": {
+      "1": "Execution is supported, but no persistence artifact or installation evidence is present.",
+      "2": "Explorer can launch user-selected files, yet mshta fetching a new domain remains anomalous and requires investigation.",
+      "3": "An outbound HTTPS request does not establish that data left the environment."
+    },
+    "second_best": "User-initiated benign HTA execution is possible, but the newly registered destination makes malicious proxy execution more likely.",
+    "key_clue": "mshta retrieves remote content while EDR observes no conventional payload write.",
+    "trap": "Turning suspicious execution evidence into an unsupported impact claim.",
+    "takeaway": "State the narrowest conclusion supported by correlated process and network evidence.",
+    "concept_tags": [
+      "mshta",
+      "LOLBins",
+      "Event ID 4688",
+      "proxy logs"
+    ],
+    "mistake_type": "premature certainty",
+    "misconception": "Assumed execution proved persistence",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tier 3 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30305,
+    "domain": "Security Operations",
+    "objective": "Analyze indicators of potentially malicious activity",
+    "objective_id": "1.2",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "OIDC sign-in investigation",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "FIRST",
+    "qtype": "SINGLE",
+    "question": "An OIDC application shows a user session from a compliant laptop. Minutes later the same refresh-token family is used from a noncompliant device; Entra sign-in logs show no new MFA, and Conditional Access requires compliant devices only at initial sign-in. What should the analyst do FIRST?",
+    "options": [
+      "Revoke the token family and active sessions, then preserve sign-in and application audit data",
+      "Mark the second access compliant because the original session satisfied policy",
+      "Reset the password and wait for token expiry",
+      "Block the second IP while keeping the token family active for investigation"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The policy is not reevaluating device compliance during token reuse, so revocation contains likely replay and preserved logs support scope.",
+    "why_correct": "The policy is not reevaluating device compliance during token reuse, so revocation contains likely replay and preserved logs support scope.",
+    "why_wrong": {
+      "1": "Initial compliance does not validate later use from a different device.",
+      "2": "Password reset may not invalidate existing refresh tokens promptly.",
+      "3": "IP blocking is narrower and the token can be replayed through other infrastructure."
+    },
+    "second_best": "Password reset is appropriate for suspected credential compromise, but the evidence specifically points to reusable token material.",
+    "key_clue": "The same token family appears on a different device without fresh authentication or policy evaluation.",
+    "trap": "Assuming initial Conditional Access approval remains trustworthy for every token use.",
+    "takeaway": "Contain the token artifact and investigate the policy gap that allowed reuse.",
+    "concept_tags": [
+      "OIDC",
+      "Entra ID",
+      "Conditional Access",
+      "refresh token"
+    ],
+    "mistake_type": "identity containment gap",
+    "misconception": "Misread authentication sequence",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tier 3 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30306,
+    "domain": "Security Operations",
+    "objective": "Compare and contrast threat-intelligence and threat-hunting concepts",
+    "objective_id": "1.4",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Threat hunting and ATT&CK",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "HIGHEST priority",
+    "qtype": "SINGLE",
+    "question": "A hunt for T1218.011 finds rundll32.exe on 400 endpoints. Only six events use a JavaScript protocol handler; two of those are followed by outbound connections to rare domains. Which hosts have the HIGHEST priority for investigation?",
+    "options": [
+      "The two with protocol-handler execution and rare-domain connections",
+      "All 400 because any rundll32 execution maps to the technique",
+      "The six with protocol-handler execution, with equal priority",
+      "Endpoints with the newest rundll32.exe file timestamp"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The uncommon execution syntax plus time-correlated rare network activity provides the strongest multi-source evidence of malicious proxy execution.",
+    "why_correct": "The uncommon execution syntax plus time-correlated rare network activity provides the strongest multi-source evidence of malicious proxy execution.",
+    "why_wrong": {
+      "1": "rundll32 is common; technique mapping without behavioral context creates excessive noise.",
+      "2": "All six deserve review, but the network correlation raises priority for two.",
+      "3": "A native binary timestamp is weak evidence compared with execution and destination behavior."
+    },
+    "second_best": "Investigating all six unusual command lines is defensible, but equal priority ignores the stronger network evidence.",
+    "key_clue": "Only two hosts combine the suspicious execution variant with a rare outbound destination.",
+    "trap": "Treating ATT&CK mapping as proof instead of a hunting framework.",
+    "takeaway": "Prioritize hunt results by compounded behavioral evidence.",
+    "concept_tags": [
+      "MITRE ATT&CK",
+      "T1218.011",
+      "rundll32",
+      "threat hunting"
+    ],
+    "mistake_type": "incomplete correlation",
+    "misconception": "Stopped after first IOC",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tier 3 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30307,
+    "domain": "Security Operations",
+    "objective": "Explain the importance of efficiency and process improvement in security operations",
+    "objective_id": "1.5",
+    "tier": 4,
+    "difficulty": "Exam Killer",
+    "topic": "Cloud detection coverage",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "BEST",
+    "qtype": "SINGLE",
+    "question": "A detection flags impossible travel, but executives use a trusted global proxy. A recent account takeover reused a stolen SAML session through that proxy, and application logs—not IdP logs—showed the device change. The SOC cannot add an endpoint agent to executive tablets this quarter. Which redesign is BEST?",
+    "options": [
+      "Correlate IdP session identifiers with application device signals and proxy context, alerting on session reuse across device states",
+      "Exclude all trusted-proxy addresses from impossible-travel detections",
+      "Require password resets whenever two countries appear within an hour",
+      "Block executive tablet access until endpoint agents can be deployed"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Cross-layer session and device correlation detects the observed replay while accounting for the proxy and respecting the endpoint constraint.",
+    "why_correct": "Cross-layer session and device correlation detects the observed replay while accounting for the proxy and respecting the endpoint constraint.",
+    "why_wrong": {
+      "1": "Proxy exclusion reduces false positives but recreates the blind spot used in the takeover.",
+      "2": "Password resets are disruptive and may not invalidate stolen SAML sessions.",
+      "3": "Blocking tablets provides strong prevention but violates the stated business constraint when identity and application telemetry can compensate."
+    },
+    "second_best": "Blocking unmanaged tablets is technically strong, but it is operationally unacceptable and less targeted than cross-layer session detection.",
+    "key_clue": "The proxy masks geography, while the application retains the device-change evidence absent from IdP logs.",
+    "trap": "Removing noisy context instead of replacing it with stronger correlated signals.",
+    "takeaway": "Design detections around the telemetry that survives known environmental distortions.",
+    "concept_tags": [
+      "SAML",
+      "SIEM correlation",
+      "detection engineering",
+      "session theft"
+    ],
+    "mistake_type": "business-impact neglect",
+    "misconception": "Ignored business impact",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 5,
+    "reasoning_depth": "evaluation",
+    "distractor_strength": "expert",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tier 4 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30308,
+    "domain": "Vulnerability Management",
+    "objective": "Analyze output from vulnerability assessment tools",
+    "objective_id": "2.2",
+    "tier": 2,
+    "difficulty": "Practice",
+    "topic": "Windows vulnerability validation",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "NEXT",
+    "qtype": "SINGLE",
+    "question": "A scanner reports SMB signing disabled on a Windows server. Get-SmbServerConfiguration shows signing required, but the scan targeted a load-balanced address and used no credentials. What should the analyst do NEXT?",
+    "options": [
+      "Identify the responding backend and run an authenticated validation against each server",
+      "Close the finding based only on the local PowerShell output",
+      "Enable signing again on the checked server during the next window",
+      "Treat the load balancer as the vulnerable Windows host"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The conflicting evidence and shared address require backend attribution and authenticated checks before closure or remediation.",
+    "why_correct": "The conflicting evidence and shared address require backend attribution and authenticated checks before closure or remediation.",
+    "why_wrong": {
+      "1": "The local result validates one host, not every backend that may answer the shared address.",
+      "2": "Reapplying an already enforced setting does not resolve whether another backend is exposed.",
+      "3": "The front end may pass traffic, but the reported SMB configuration belongs to the responding Windows service."
+    },
+    "second_best": "Closing from the native command output is tempting, but it assumes the checked host generated the scanner response.",
+    "key_clue": "The unauthenticated scan used a load-balanced address while the native check covered one server.",
+    "trap": "Validating the wrong asset behind a shared endpoint.",
+    "takeaway": "Resolve asset identity before reconciling conflicting scanner and native-tool evidence.",
+    "concept_tags": [
+      "Get-SmbServerConfiguration",
+      "SMB signing",
+      "authenticated scanning",
+      "load balancer"
+    ],
+    "mistake_type": "asset attribution error",
+    "misconception": "Trusted a single validation source",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "plausible_misconception",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Tier 2 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30309,
+    "domain": "Vulnerability Management",
+    "objective": "Analyze data to prioritize vulnerabilities",
+    "objective_id": "2.3",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "KEV and compensating controls",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "HIGHEST priority",
+    "qtype": "SINGLE",
+    "question": "A KEV-listed RCE affects an internet-facing document portal. The vulnerable function requires authentication, MFA is enforced, and logs show password spraying against portal accounts. An unauthenticated internal backup appliance has a higher CVSS score but is isolated to an admin VLAN. Which is the HIGHEST priority?",
+    "options": [
+      "The document portal because active credential attacks could reach the KEV path",
+      "The backup appliance because its CVSS score and unauthenticated vector are higher",
+      "Both equally because each can lead to remote code execution",
+      "The portal only after a successful authenticated exploit is observed"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "KEV status, internet exposure, and current credential attacks make the authenticated portal path realistically reachable despite MFA.",
+    "why_correct": "KEV status, internet exposure, and current credential attacks make the authenticated portal path realistically reachable despite MFA.",
+    "why_wrong": {
+      "1": "The backup flaw is serious, but its isolated administrative exposure reduces immediate attack likelihood.",
+      "2": "Equal severity ignores material differences in threat activity and reachability.",
+      "3": "Waiting for successful exploitation defeats risk-based prevention."
+    },
+    "second_best": "The backup appliance has a stronger intrinsic vector, but its current exposure is substantially narrower.",
+    "key_clue": "Password spraying is actively attempting to satisfy the one control separating attackers from a known-exploited path.",
+    "trap": "Treating authentication as a complete compensating control.",
+    "takeaway": "Prioritize using real attack paths, not CVSS or control presence alone.",
+    "concept_tags": [
+      "KEV",
+      "CVSS",
+      "MFA",
+      "exposure"
+    ],
+    "mistake_type": "CVSS fixation",
+    "misconception": "Focused on CVSS instead of exploitability",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tier 3 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30310,
+    "domain": "Vulnerability Management",
+    "objective": "Analyze data to prioritize vulnerabilities",
+    "objective_id": "2.3",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Asset criticality",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "FIRST",
+    "qtype": "SINGLE",
+    "question": "Two servers share the same exploitable local-privilege-escalation CVE. One is a domain administration jump host with EDR and no internet access; the other is a public kiosk in a segmented guest zone with no privileged credentials. Patching capacity is limited. Which should be remediated FIRST?",
+    "options": [
+      "The administration jump host because existing footholds could gain domain-level privilege",
+      "The public kiosk because internet proximity always outweighs asset role",
+      "Both with equal urgency because the CVE is identical",
+      "The kiosk first because it lacks EDR coverage"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The vulnerability requires a foothold; the jump host combines that condition with far greater credential and privilege impact, even with EDR and limited exposure.",
+    "why_correct": "The vulnerability requires a foothold; the jump host combines that condition with far greater credential and privilege impact, even with EDR and limited exposure.",
+    "why_wrong": {
+      "1": "Internet proximity matters, but segmentation and absence of privileged context reduce the kiosk consequence.",
+      "2": "Identical technical severity does not mean identical environmental risk.",
+      "3": "Missing EDR raises uncertainty, but it does not outweigh the jump host’s privilege concentration."
+    },
+    "second_best": "The kiosk lacks monitoring and is easier to reach, making it credible, but exploitation there has a smaller blast radius.",
+    "key_clue": "Local exploitation makes post-compromise privilege value more decisive than direct internet reachability.",
+    "trap": "Applying exposure heuristics without considering exploit prerequisites and asset role.",
+    "takeaway": "Match exploit conditions to asset criticality and likely impact.",
+    "concept_tags": [
+      "asset criticality",
+      "Active Directory",
+      "privilege escalation",
+      "EDR"
+    ],
+    "mistake_type": "wrong risk factor weighting",
+    "misconception": "Ignored asset criticality",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tier 3 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30311,
+    "domain": "Vulnerability Management",
+    "objective": "Recommend controls to mitigate attacks and software vulnerabilities",
+    "objective_id": "2.4",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Patch constraint mitigation",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "LOWEST risk",
+    "qtype": "SINGLE",
+    "question": "A PowerShell remoting flaw affects a legacy server that cannot be patched for two weeks. Only the automation subnet needs WinRM, service-account rotation is scheduled tonight, and EDR supports command-line telemetry. Which interim plan has the LOWEST risk?",
+    "options": [
+      "Allow WinRM only from the automation subnet, rotate the account, and alert on anomalous PowerShell parents",
+      "Disable WinRM until patching even though nightly settlement depends on it",
+      "Rely on EDR alerts while leaving current network access unchanged",
+      "Restrict WinRM to administrators but postpone account rotation to avoid disruption"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Layered reachability reduction, credential rotation, and behavior monitoring preserve the required workflow while reducing exploit and credential-abuse paths.",
+    "why_correct": "Layered reachability reduction, credential rotation, and behavior monitoring preserve the required workflow while reducing exploit and credential-abuse paths.",
+    "why_wrong": {
+      "1": "Disabling the service removes exposure but violates a stated critical dependency.",
+      "2": "Detection alone leaves the vulnerable interface broadly reachable.",
+      "3": "Administrator restriction narrows users, but stale service credentials and network reach remain avoidable risks."
+    },
+    "second_best": "Disabling WinRM is the strongest technical mitigation, but it fails the settlement availability constraint.",
+    "key_clue": "A single known subnet requires access and a credential rotation can occur immediately.",
+    "trap": "Choosing either availability or security when layered compensation can address both.",
+    "takeaway": "Use prevention, credential hygiene, and detection together during a time-bound patch delay.",
+    "concept_tags": [
+      "WinRM",
+      "PowerShell",
+      "segmentation",
+      "compensating controls"
+    ],
+    "mistake_type": "constraint blindness",
+    "misconception": "Ignored business impact",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tier 3 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30312,
+    "domain": "Vulnerability Management",
+    "objective": "Explain concepts related to vulnerability response, handling, and management",
+    "objective_id": "2.5",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Remediation validation",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "NEXT",
+    "qtype": "SINGLE",
+    "question": "A team patched a cloud VM image, but autoscaling logs show three instances still use the old digest. The scanner marks the CVE fixed on the template, and a network control blocks the exploit port from the internet. What should happen NEXT?",
+    "options": [
+      "Replace the three instances with the fixed image and validate their runtime digests",
+      "Close the finding because the deployment template and perimeter control are updated",
+      "Rescan only the template after the next autoscaling event",
+      "Accept the remaining risk until the instances naturally recycle"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Runtime instances remain vulnerable; controlled replacement plus digest validation completes remediation while the network control only reduces external exposure.",
+    "why_correct": "Runtime instances remain vulnerable; controlled replacement plus digest validation completes remediation while the network control only reduces external exposure.",
+    "why_wrong": {
+      "1": "Template correction and a perimeter control do not remediate currently running vulnerable instances or internal paths.",
+      "2": "Template rescanning repeats evidence already available and does not inspect runtime state.",
+      "3": "Natural recycling has uncertain timing and leaves known vulnerable assets active."
+    },
+    "second_best": "Closing based on template state is defensible in an immutable workflow only if runtime convergence has been proven.",
+    "key_clue": "Autoscaling evidence explicitly identifies three live instances on the old digest.",
+    "trap": "Confusing desired state with deployed state.",
+    "takeaway": "Validate remediation on running assets, not only build artifacts.",
+    "concept_tags": [
+      "cloud VM",
+      "image digest",
+      "autoscaling",
+      "validation"
+    ],
+    "mistake_type": "asset-state confusion",
+    "misconception": "Stopped after control deployment",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tier 3 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30313,
+    "domain": "Vulnerability Management",
+    "objective": "Analyze data to prioritize vulnerabilities",
+    "objective_id": "2.3",
+    "tier": 4,
+    "difficulty": "Exam Killer",
+    "topic": "Emergency risk decision",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "MOST defensible",
+    "qtype": "SINGLE",
+    "question": "A customer identity service has a KEV-listed deserialization flaw. The vulnerable endpoint is behind a WAF that blocks published payloads, but red-team testing achieved bypass only after authenticating with a partner account. Patching now requires a 30-minute outage during enrollment; disabling partner access affects one major integration. Which recommendation is MOST defensible?",
+    "options": [
+      "Temporarily disable partner access, patch in the earliest emergency window, and monitor authenticated requests",
+      "Keep all access available until the normal patch window because exploitation requires authentication",
+      "Take the entire identity service offline immediately and patch without coordination",
+      "Leave the WAF as the sole control but add an alert for the red-team payload"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The tested authenticated bypass invalidates the WAF as a sufficient control. Narrowly disabling the reachable partner path reduces exposure while an emergency patch is coordinated with less impact than full shutdown.",
+    "why_correct": "The tested authenticated bypass invalidates the WAF as a sufficient control. Narrowly disabling the reachable partner path reduces exposure while an emergency patch is coordinated with less impact than full shutdown.",
+    "why_wrong": {
+      "1": "Authentication reduces exposure, but a partner credential is an evidenced feasible prerequisite and KEV raises urgency.",
+      "2": "Full shutdown removes risk fastest but creates broader impact than disabling the specific reachable path.",
+      "3": "Alerting on one payload is detection-only and the WAF bypass may vary."
+    },
+    "second_best": "Immediate full-service shutdown is technically defensible, but the evidence supports a narrower containment that protects enrollment continuity.",
+    "key_clue": "The only demonstrated bypass requires partner authentication, making that access path a precise temporary control point.",
+    "trap": "Choosing a nominal WAF control or maximum outage instead of the narrow evidenced path.",
+    "takeaway": "Use tested exploit prerequisites to design proportionate emergency mitigation.",
+    "concept_tags": [
+      "KEV",
+      "WAF bypass",
+      "business continuity",
+      "partner access"
+    ],
+    "mistake_type": "business-impact neglect",
+    "misconception": "Ignored business impact",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 5,
+    "reasoning_depth": "evaluation",
+    "distractor_strength": "expert",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tier 4 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30314,
+    "domain": "Incident Response and Management",
+    "objective": "Perform incident response activities",
+    "objective_id": "3.2",
+    "tier": 2,
+    "difficulty": "Practice",
+    "topic": "Active Directory triage",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "FIRST",
+    "qtype": "SINGLE",
+    "question": "Event ID 4728 shows a help-desk account added to Domain Admins, followed by 4672 on a domain controller. No approved change exists. What should the responder do FIRST?",
+    "options": [
+      "Disable the added account, remove the membership, and preserve the correlated security events",
+      "Remove the membership but keep the account active for observation",
+      "Reset every Domain Admin password before identifying sessions",
+      "Shut down the domain controller that logged 4672"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The unauthorized privilege change plus privileged logon supports immediate account containment and reversal while the events are retained for scope.",
+    "why_correct": "The unauthorized privilege change plus privileged logon supports immediate account containment and reversal while the events are retained for scope.",
+    "why_wrong": {
+      "1": "Removing membership addresses privilege but leaves a likely compromised account active.",
+      "2": "Broad resets may be needed after scoping, but they can disrupt services and do not first stop this account.",
+      "3": "The domain controller is an evidence source and not shown to be compromised."
+    },
+    "second_best": "Removing only the membership is less disruptive, but it leaves the suspicious identity able to act with its baseline privileges.",
+    "key_clue": "An unapproved group change is followed by use of the newly granted privilege.",
+    "trap": "Treating the group membership as the only symptom instead of containing the identity.",
+    "takeaway": "Contain an evidenced privileged identity while preserving the authorization sequence.",
+    "concept_tags": [
+      "Event ID 4728",
+      "Event ID 4672",
+      "Active Directory",
+      "privilege escalation"
+    ],
+    "mistake_type": "incomplete containment",
+    "misconception": "Confused containment scope",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "plausible_misconception",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Tier 2 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30315,
+    "domain": "Incident Response and Management",
+    "objective": "Perform incident response activities",
+    "objective_id": "3.2",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Cloud consent incident",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "NEXT",
+    "qtype": "SINGLE",
+    "question": "Entra audit logs show a user granted OAuth mail access to an unverified app. The app read messages for four hours, the user denies consent, and the same publisher has two other tenant grants. What should the team do NEXT?",
+    "options": [
+      "Revoke the affected grant and sessions, then scope the publisher and permissions across the tenant",
+      "Disable only the user and wait for the app access token to expire",
+      "Remove every application from the same publisher before reviewing business ownership",
+      "Reset the user password and close the incident if no new sign-ins occur"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Immediate grant/session revocation contains known access; tenant-wide publisher and permission scoping addresses likely related exposure without unvalidated mass removal.",
+    "why_correct": "Immediate grant/session revocation contains known access; tenant-wide publisher and permission scoping addresses likely related exposure without unvalidated mass removal.",
+    "why_wrong": {
+      "1": "User disablement may not promptly revoke delegated tokens and ignores other grants.",
+      "2": "Broad removal may eventually be warranted, but first requires ownership and permission evidence to avoid unnecessary outages.",
+      "3": "Password reset does not remove delegated consent and absence of sign-ins does not prove application inactivity."
+    },
+    "second_best": "Removing all publisher applications is strong containment, but its scope is unsupported until ownership and grants are reviewed.",
+    "key_clue": "The publisher already has two additional grants, expanding scope beyond the first user without proving all apps malicious.",
+    "trap": "Stopping after the first consent grant or removing applications without scope evidence.",
+    "takeaway": "Contain the known grant, then investigate related delegated access tenant-wide.",
+    "concept_tags": [
+      "OAuth",
+      "Entra ID",
+      "consent grant",
+      "cloud investigation"
+    ],
+    "mistake_type": "incomplete scoping",
+    "misconception": "Stopped after first IOC",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tier 3 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30316,
+    "domain": "Incident Response and Management",
+    "objective": "Perform incident response activities",
+    "objective_id": "3.2",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Windows lateral movement",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "BEST",
+    "qtype": "SINGLE",
+    "question": "A workstation logs 4624 type 3 from an admin server, then 7045 creates a service whose binary resides in ADMIN$. The admin server’s EDR shows a technician running a signed deployment tool at the same time, but the target is outside the approved change list. What is the BEST next step?",
+    "options": [
+      "Validate the technician, job configuration, and target while temporarily containing the new service",
+      "Declare malicious lateral movement and isolate both systems immediately",
+      "Allow the service because the initiating tool is signed",
+      "Delete the service and binary before collecting the deployment records"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The activity matches both legitimate deployment and remote-service lateral movement. The unauthorized target is the decisive anomaly, so validation plus scoped containment preserves evidence and limits risk.",
+    "why_correct": "The activity matches both legitimate deployment and remote-service lateral movement. The unauthorized target is the decisive anomaly, so validation plus scoped containment preserves evidence and limits risk.",
+    "why_wrong": {
+      "1": "Isolation is defensible if compromise is confirmed, but the signed tool and technician activity leave a credible administrative explanation.",
+      "2": "A signed tool can be misconfigured or abused, and the target violates the approved scope.",
+      "3": "Deletion is premature eradication and removes evidence before attribution."
+    },
+    "second_best": "Isolating both hosts is a credible security response, but current evidence supports narrow service containment while validating the change context.",
+    "key_clue": "The execution pattern is dual-use, and the target—not the tool signature—falls outside authorization.",
+    "trap": "Trusting a signed tool or escalating before resolving change scope.",
+    "takeaway": "Correlate native events, endpoint telemetry, operator identity, and approved scope.",
+    "concept_tags": [
+      "Event ID 4624",
+      "Event ID 7045",
+      "ADMIN$",
+      "lateral movement"
+    ],
+    "mistake_type": "dual-use misclassification",
+    "misconception": "Assumed signed tooling was benign",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tier 3 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30317,
+    "domain": "Incident Response and Management",
+    "objective": "Perform incident response activities",
+    "objective_id": "3.2",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "SAML incident containment",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "MOST appropriate",
+    "qtype": "SINGLE",
+    "question": "A stolen SAML session accesses a payroll application. IdP logs show the employee account is disabled, application logs show the session remains active, and the SaaS owner can revoke sessions only during a scheduled maintenance call in 20 minutes. Which action is MOST appropriate FIRST?",
+    "options": [
+      "Use the application’s emergency access policy to restrict payroll exports while coordinating session revocation",
+      "Re-enable the employee account to trigger a password reset",
+      "Wait for the maintenance call because the identity account is already disabled",
+      "Block the observed IP and consider the incident contained"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "A compensating application restriction limits the highest-impact action during the unavoidable revocation delay; session revocation remains the coordinated next containment step.",
+    "why_correct": "A compensating application restriction limits the highest-impact action during the unavoidable revocation delay; session revocation remains the coordinated next containment step.",
+    "why_wrong": {
+      "1": "Re-enabling the identity increases access and a password reset may not invalidate the application session.",
+      "2": "The session is demonstrably active, so account disablement alone is insufficient.",
+      "3": "IP blocking is narrow and the session may move to other infrastructure."
+    },
+    "second_best": "IP blocking may reduce immediate access with little disruption, but export restriction protects the critical business action regardless of source address.",
+    "key_clue": "Session revocation is delayed, but an application-level policy can immediately restrict the sensitive function.",
+    "trap": "Waiting for ideal containment while a narrower compensating control is available.",
+    "takeaway": "Use application controls to bridge cloud-session revocation delays.",
+    "concept_tags": [
+      "SAML",
+      "session revocation",
+      "SaaS",
+      "compensating control"
+    ],
+    "mistake_type": "wrong containment target",
+    "misconception": "Assumed account disablement revoked sessions",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tier 3 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30318,
+    "domain": "Incident Response and Management",
+    "objective": "Explain preparation and post-incident activity phases of the incident response lifecycle",
+    "objective_id": "3.3",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Evidence and recovery",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "MOST defensible",
+    "qtype": "SINGLE",
+    "question": "After a web-shell incident, the server is isolated and a clean replacement is ready. The team has proxy logs and a disk snapshot, but volatile memory was not captured. The business recovery target expires in 45 minutes. What is the MOST defensible next action?",
+    "options": [
+      "Put the clean replacement into service with heightened monitoring while retaining the isolated server for analysis",
+      "Delay recovery until memory can be reconstructed from the disk snapshot",
+      "Reconnect the original server after deleting the web shell",
+      "Wipe the original server now to meet evidence-retention policy"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The lost volatile evidence cannot be recovered by delaying. A monitored clean replacement meets recovery needs while the isolated original and existing evidence remain available.",
+    "why_correct": "The lost volatile evidence cannot be recovered by delaying. A monitored clean replacement meets recovery needs while the isolated original and existing evidence remain available.",
+    "why_wrong": {
+      "1": "Disk evidence cannot reconstruct all lost volatile state, so delay adds little investigative value and violates recovery needs.",
+      "2": "Deleting one artifact does not establish eradication and reintroduces the compromised system.",
+      "3": "Immediate wiping destroys evidence and is not required to restore service."
+    },
+    "second_best": "Delaying for deeper forensics is normally defensible, but the missing memory is already irrecoverable and the clean replacement separates recovery from analysis.",
+    "key_clue": "Recovery can proceed independently because the compromised server remains isolated and a clean replacement exists.",
+    "trap": "Sacrificing recovery for evidence that can no longer be collected.",
+    "takeaway": "Separate clean recovery from continued analysis when evidence preservation permits both.",
+    "concept_tags": [
+      "web shell",
+      "recovery objective",
+      "forensics",
+      "business continuity"
+    ],
+    "mistake_type": "recovery sequencing",
+    "misconception": "Ignored business impact",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tier 3 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30319,
+    "domain": "Incident Response and Management",
+    "objective": "Perform incident response activities",
+    "objective_id": "3.2",
+    "tier": 4,
+    "difficulty": "Exam Killer",
+    "topic": "Safety-critical containment",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "BEST",
+    "qtype": "SINGLE",
+    "question": "A Linux controller in a water facility opens an outbound SSH tunnel. Audit logs show a vendor account used sudo minutes earlier; the vendor confirms maintenance but not the tunnel. The controller cannot be isolated without stopping treatment, and a redundant controller needs 25 minutes to synchronize. What is the BEST immediate plan?",
+    "options": [
+      "Block the tunnel destination and restrict the vendor account, capture volatile evidence, then fail over and isolate the controller",
+      "Isolate the controller immediately and invoke a treatment shutdown",
+      "Allow the tunnel until redundancy is ready because maintenance was authorized",
+      "Kill sshd on the controller and leave the vendor account active"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Destination blocking and identity restriction contain the evidenced paths while preserving treatment and evidence; planned failover enables full isolation as soon as safely possible.",
+    "why_correct": "Destination blocking and identity restriction contain the evidenced paths while preserving treatment and evidence; planned failover enables full isolation as soon as safely possible.",
+    "why_wrong": {
+      "1": "Immediate isolation is strong containment but creates an avoidable safety impact during the known synchronization interval.",
+      "2": "Authorized maintenance does not authorize the unexplained tunnel, and waiting leaves an active path.",
+      "3": "Killing sshd may interrupt legitimate control functions, treats one process, and leaves the suspicious account usable."
+    },
+    "second_best": "Immediate isolation is technically strongest, but the safety constraint and short failover path make staged containment more defensible.",
+    "key_clue": "Two narrow controls can interrupt the observed network and identity paths during the 25-minute safety constraint.",
+    "trap": "Choosing maximum containment without accounting for physical safety.",
+    "takeaway": "Stage containment on safety-critical systems while closing evidenced paths immediately.",
+    "concept_tags": [
+      "Linux",
+      "SSH tunnel",
+      "sudo",
+      "operational technology"
+    ],
+    "mistake_type": "business-impact neglect",
+    "misconception": "Ignored business impact",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 5,
+    "reasoning_depth": "evaluation",
+    "distractor_strength": "expert",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tier 4 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30320,
+    "domain": "Reporting and Communication",
+    "objective": "Explain the importance of vulnerability management reporting and communication",
+    "objective_id": "4.1",
+    "tier": 2,
+    "difficulty": "Practice",
+    "topic": "Remediation reporting",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "MOST appropriate",
+    "qtype": "SINGLE",
+    "question": "A report shows patch compliance rose from 82% to 94%, but five internet-facing KEV findings remain overdue and were excluded as approved exceptions. Which update is MOST appropriate for leadership?",
+    "options": [
+      "Report the improvement and separately identify the five residual risks, owners, controls, and expiration dates",
+      "Report 94% compliance as the sole risk indicator",
+      "Recalculate compliance with all exceptions counted as remediated",
+      "Report only the five KEV findings and omit the broader improvement"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "Leadership needs both progress and decision-relevant residual risk, including accountability and time limits for exceptions.",
+    "why_correct": "Leadership needs both progress and decision-relevant residual risk, including accountability and time limits for exceptions.",
+    "why_wrong": {
+      "1": "The aggregate can conceal a small set of high-consequence exposures.",
+      "2": "An exception accepts or mitigates risk; it does not make the vulnerable condition remediated.",
+      "3": "The KEV items deserve emphasis, but omitting overall improvement gives an incomplete performance picture."
+    },
+    "second_best": "Reporting only the KEV exceptions keeps attention on urgent risk, but it withholds meaningful program trend context.",
+    "key_clue": "Approved exceptions explain the metric treatment but do not eliminate residual exposure.",
+    "trap": "Allowing a favorable aggregate to hide high-risk exceptions.",
+    "takeaway": "Pair program trends with transparent residual-risk exceptions.",
+    "concept_tags": [
+      "KEV",
+      "exception reporting",
+      "leadership",
+      "residual risk"
+    ],
+    "mistake_type": "metric masking",
+    "misconception": "Confused exception with remediation",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "plausible_misconception",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Tier 2 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30321,
+    "domain": "Reporting and Communication",
+    "objective": "Explain the importance of incident response reporting and communication",
+    "objective_id": "4.2",
+    "tier": 2,
+    "difficulty": "Practice",
+    "topic": "Operational status update",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "MOST defensible",
+    "qtype": "SINGLE",
+    "question": "A cloud incident has one confirmed compromised account, three accounts under review, and no verified data transfer. Operations asks whether to disable all four. What is the MOST defensible update?",
+    "options": [
+      "Confirm containment of the compromised account, label the other three as under investigation, and state the evidence threshold for further disablement",
+      "Describe all four accounts as compromised to accelerate containment",
+      "Report only the confirmed account and omit the ongoing scope review",
+      "State that no data transfer means the other accounts are safe"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The update separates confirmed facts from hypotheses and gives operations a decision rule for proportionate additional containment.",
+    "why_correct": "The update separates confirmed facts from hypotheses and gives operations a decision rule for proportionate additional containment.",
+    "why_wrong": {
+      "1": "Broad labeling may prompt protective action but overstates evidence and can disrupt legitimate work.",
+      "2": "Omitting active scope review prevents operations from preparing for possible containment.",
+      "3": "Absence of verified transfer does not establish that authentication activity is benign."
+    },
+    "second_best": "Treating all four as compromised is operationally conservative, but current evidence supports only one and the impact of disabling accounts matters.",
+    "key_clue": "The evidence supports different confidence levels for the confirmed account and the three candidates.",
+    "trap": "Turning investigative scope into confirmed impact.",
+    "takeaway": "Communicate confidence, current action, and escalation thresholds explicitly.",
+    "concept_tags": [
+      "incident status",
+      "confidence",
+      "stakeholders",
+      "scope"
+    ],
+    "mistake_type": "premature certainty",
+    "misconception": "Reported hypotheses as facts",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "plausible_misconception",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "application",
+    "distractor_strength": "acceptable",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 1,
+    "psychometric_notes": "Tier 2 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30322,
+    "domain": "Reporting and Communication",
+    "objective": "Explain the importance of vulnerability management reporting and communication",
+    "objective_id": "4.1",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Risk dashboard design",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "BEST",
+    "qtype": "SINGLE",
+    "question": "A board dashboard ranks teams by raw vulnerability closures. One team closes thousands of low-risk workstation findings while another is replacing two exposed legacy payment systems. What metric change is BEST?",
+    "options": [
+      "Weight overdue exposure by exploitability, asset criticality, and control effectiveness, while showing closure volume separately",
+      "Rank teams only by mean CVSS of open findings",
+      "Count each legacy-system replacement as the number of CVEs it removes",
+      "Remove team comparisons and report scanner totals only"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "A risk-weighted measure captures meaningful exposure reduction without discarding operational throughput context.",
+    "why_correct": "A risk-weighted measure captures meaningful exposure reduction without discarding operational throughput context.",
+    "why_wrong": {
+      "1": "Mean CVSS remains severity-centric and can miss KEV status, reachability, and compensating controls.",
+      "2": "CVEs removed is useful but can still reward volume rather than the risk of the systems replaced.",
+      "3": "Scanner totals preserve the same activity bias and eliminate accountability."
+    },
+    "second_best": "Counting CVEs eliminated by replacement better represents that project, but it still treats vulnerability volume as risk.",
+    "key_clue": "The current ranking rewards easy volume and undervalues reduction of concentrated critical exposure.",
+    "trap": "Using activity volume as a proxy for business-risk reduction.",
+    "takeaway": "Separate throughput metrics from risk-weighted outcomes.",
+    "concept_tags": [
+      "risk dashboard",
+      "asset criticality",
+      "exploitability",
+      "metrics"
+    ],
+    "mistake_type": "vanity metric",
+    "misconception": "Focused on CVSS instead of risk",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tier 3 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30323,
+    "domain": "Reporting and Communication",
+    "objective": "Explain the importance of incident response reporting and communication",
+    "objective_id": "4.2",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Legal incident briefing",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "NEXT",
+    "qtype": "SINGLE",
+    "question": "DLP confirms an encrypted archive left a finance laptop. File-access logs show regulated and nonregulated folders were opened, but the archive manifest is unavailable. Legal asks for the affected-record count before a notification deadline. What should the analyst report NEXT?",
+    "options": [
+      "Report confirmed transfer, provide a bounded potential record range with assumptions, and prioritize evidence that narrows the range",
+      "Report the maximum possible record count as confirmed to avoid undernotification",
+      "Delay the briefing until the exact archive contents are recovered",
+      "Report zero regulated records because encryption prevents content inspection"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "A bounded, assumption-labeled estimate supports deadline decisions without presenting uncertain contents as fact, and it identifies the next evidence priority.",
+    "why_correct": "A bounded, assumption-labeled estimate supports deadline decisions without presenting uncertain contents as fact, and it identifies the next evidence priority.",
+    "why_wrong": {
+      "1": "A conservative maximum may inform planning, but calling it confirmed misstates the evidence.",
+      "2": "Exact recovery may not occur before the deadline, so silence impairs legal decision-making.",
+      "3": "Encryption limits inspection; it does not prove regulated records were absent."
+    },
+    "second_best": "Using the maximum as a provisional planning figure is defensible, but it must be labeled as an upper bound rather than confirmed impact.",
+    "key_clue": "Folder-access evidence supports a range, while the missing manifest prevents an exact count.",
+    "trap": "Choosing false precision or withholding useful uncertainty.",
+    "takeaway": "Communicate bounded estimates, assumptions, and evidence plans under deadlines.",
+    "concept_tags": [
+      "DLP",
+      "legal communication",
+      "uncertainty",
+      "notification"
+    ],
+    "mistake_type": "certainty overstatement",
+    "misconception": "Reported estimates as confirmed facts",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tier 3 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30324,
+    "domain": "Reporting and Communication",
+    "objective": "Explain the importance of incident response reporting and communication",
+    "objective_id": "4.2",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Detection change communication",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "MOST appropriate",
+    "qtype": "SINGLE",
+    "question": "A new OAuth anomaly rule doubles alert volume. Analysts confirm two true positives, but 70% of alerts come from a sanctioned automation app using rotating addresses. The detection owner proposes suppressing the app ID globally. What recommendation is MOST appropriate?",
+    "options": [
+      "Document the measured impact and use a scoped exception tied to app ID, expected permissions, and workload identity",
+      "Suppress the app ID globally because it is sanctioned",
+      "Roll back the rule until the automation team assigns fixed IP addresses",
+      "Keep the rule unchanged and ask the SOC to absorb the volume"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "A contextual exception retains detection for unexpected permissions or user contexts while reducing measured noise, and the report makes the tradeoff auditable.",
+    "why_correct": "A contextual exception retains detection for unexpected permissions or user contexts while reducing measured noise, and the report makes the tradeoff auditable.",
+    "why_wrong": {
+      "1": "Sanctioned applications can be compromised or overprivileged; global suppression removes all visibility.",
+      "2": "Rollback eliminates proven detections and fixed IPs may not suit cloud automation.",
+      "3": "Unchanged volume consumes analyst capacity and degrades response without adding useful discrimination."
+    },
+    "second_best": "Rollback protects SOC capacity, but it discards a rule that already produced true positives when narrower tuning is available.",
+    "key_clue": "The benign pattern has stable identity and permission context even though its addresses rotate.",
+    "trap": "Using a brittle IP condition or broad identity suppression.",
+    "takeaway": "Report detection efficacy and tune using stable behavioral context.",
+    "concept_tags": [
+      "OAuth",
+      "detection engineering",
+      "alert tuning",
+      "workload identity"
+    ],
+    "mistake_type": "overbroad suppression",
+    "misconception": "Stopped after first tuning dimension",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tier 3 item distinguishes plausible actions using the stated evidence and operational constraint."
+  },
+  {
+    "id": 30325,
+    "domain": "Reporting and Communication",
+    "objective": "Explain the importance of vulnerability management reporting and communication",
+    "objective_id": "4.1",
+    "tier": 3,
+    "difficulty": "Exam",
+    "topic": "Exception escalation",
+    "kind": "single",
+    "select_limit": 1,
+    "question_type": "MOST appropriate",
+    "qtype": "SINGLE",
+    "question": "An application owner repeatedly extends a patch exception. The control owner confirms segmentation is effective, but the asset now stores regulated data and exploit code became public. Which communication is MOST appropriate NEXT?",
+    "options": [
+      "Escalate the changed residual risk with evidence, a revised treatment recommendation, and a decision deadline to the accountable risk owner",
+      "Renew the exception because segmentation was previously approved",
+      "Immediately declare the application noncompliant to external regulators",
+      "Send the scanner output to the application team without interpretation"
+    ],
+    "answer": [
+      0
+    ],
+    "explanation": "The data classification and exploitability changed the accepted risk assumptions, requiring an accountable, time-bound decision supported by evidence.",
+    "why_correct": "The data classification and exploitability changed the accepted risk assumptions, requiring an accountable, time-bound decision supported by evidence.",
+    "why_wrong": {
+      "1": "Prior approval relied on conditions that no longer describe current impact and likelihood.",
+      "2": "External reporting may eventually be required, but the facts do not establish an incident or automatic reporting duty.",
+      "3": "Raw output does not explain changed business risk or the decision required."
+    },
+    "second_best": "Refusing renewal is defensible, but formal escalation to the accountable owner preserves governance and business authority.",
+    "key_clue": "Both consequence and exploitability changed after the original exception decision.",
+    "trap": "Treating risk acceptance as permanent despite changed assumptions.",
+    "takeaway": "Reassess and escalate exceptions when threat or business context changes.",
+    "concept_tags": [
+      "risk exception",
+      "regulated data",
+      "exploitability",
+      "escalation"
+    ],
+    "mistake_type": "stale risk acceptance",
+    "misconception": "Ignored changed risk context",
+    "distractor_quality": {
+      "1": "credible_runner_up",
+      "2": "credible_runner_up",
+      "3": "plausible_misconception"
+    },
+    "quality_score": 4,
+    "reasoning_depth": "analysis",
+    "distractor_strength": "strong",
+    "decisive_clue_present": true,
+    "plausible_alternative_count": 2,
+    "psychometric_notes": "Tier 3 item distinguishes plausible actions using the stated evidence and operational constraint."
+  }
+]
